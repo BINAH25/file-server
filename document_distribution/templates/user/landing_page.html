@@ -1,0 +1,52 @@
+{% extends 'user/base.html'%}
+{% block title %}CHUNKIT{% endblock %}
+{% block content%}
+{% load static %}
+
+<main class="hero">
+    <div class="container flex--center mobile--center ">
+        <div class="hero--header push--down">
+            <h1>
+                Downloading made easy with
+                <span class="complementary-color">DownloadIT</span>
+            </h1>
+            <h5>Get free access to Downloading documents</h5>
+            <form class="email--address__input">
+                <input type="email" placeholder="Email Address" class="hero--input" />
+                <button>Get Started</button>
+            </form>
+            <div class="checkmarks">
+                <div class="checkmark">
+                    <img src="{% static 'assets/img/check.svg'%}" alt="" />
+                    <span>No Setup</span>
+                </div>
+                <div class="checkmark">
+                    <img src="{% static 'assets/img/check.svg'%}" alt="" />
+                    <span>No Credit card</span>
+                </div>
+                <div class="checkmark">
+                    <img src="{% static 'assets/img/check.svg'%}" alt="" />
+                    <span>Free Forever</span>
+                </div>
+            </div>
+        </div>
+        <!-- aside -->
+        <div class="tilt--folder push--down">
+            <img class="tilted--img" src="{% static 'assets/img/folder-tilt.svg'%}" alt="" />
+        </div>
+    </div>
+</main>
+
+<!-- footer section-->
+<section class="footer--section">
+    <div class="container flex space-between center mobile--center">
+        <h4 class="footer--section__h4">
+            There Is No Need For Installation, a Database, or Configuration
+        </h4>
+        <a class="get--started__btn" href="">
+            <h4>Get Started For Free</h4>
+        </a>
+    </div>
+</section>
+<!-- footer -->
+{% endblock%}
