@@ -19,9 +19,9 @@ class Register(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
+    ''' Registering a users and make them temporal'''
     def post(self, request, *args, **kwargs):
         
-
         email_address = request.POST.get("email_address")
         password = request.POST.get("password")
         
@@ -38,7 +38,8 @@ class Register(View):
         if CodeEmail.objects.filter(email_address=email_address):
             messages.error(request, "Email Already Exist Verify Your Account to Login")
             return redirect("users:verify")
-
+        
+        # Generate Verification Code
         generated_code = generate_activation_code()
         context = {
             "generated_code": generated_code,
@@ -48,6 +49,7 @@ class Register(View):
         
         code_user = CodeEmail.objects.create(email_address=email_address, password=password,code=generated_code)
         code_user.save()
+        # Send Email with verification Code  to User Email 
         try:
             message = EmailMultiAlternatives(
                 subject="Email Verification Code",
@@ -70,6 +72,7 @@ class CodeVerificationView(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
+    ''' Verifying users account to make it permanent'''
     def post(self, request, *args, **kwargs):
         code = request.POST.get("code")
         try:
@@ -95,6 +98,25 @@ class LoginView(View):
     template_name = "user/login.html"
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+    
+    def post(self, request,*args, **kwargs):
+        email_address = request.POST['email_address']
+        password = request.POST['password']
+        if User.objects.filter(email_address=email_address): 
+            user = EmailBackEnd.authenticate(request,email_address=email_address,password=password)
+            if user !=None:
+                login(request,user)
+                messages.success(request, "Email Verified")
+                return redirect(request.META.get("HTTP_REFERER"))
+            else:
+                messages.error(request,"Invalid Login Details")
+                return redirect(request.META.get("HTTP_REFERER"))
+        else:
+            messages.error(request,"User Not Found")
+            return redirect(request.META.get("HTTP_REFERER"))
+        
+        return render(request, self.template_name)
+
     
 
     
