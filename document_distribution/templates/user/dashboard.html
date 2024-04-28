@@ -5,9 +5,12 @@
     {% load static %}
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <link rel="stylesheet" href="index.css" /> -->
+    <link rel="stylesheet" href="{% static 'css/dashboard-modal.css'%}" />
+    <link rel="stylesheet" href="{% static 'css/saved-files.css'%}" />
     <link rel="stylesheet" href="{% static 'css/dashboard.css'%}" />
 </head>
 
@@ -18,7 +21,7 @@
         </div>
         <div class="user">
             <small>{{user.username}}</small>
-            <a href="{% url 'signout'%}"><img src="{% static 'assets/icons/logout-icon.png'%}" alt=""
+            <a href=""><img src="{% static 'assets/icons/logout-icon.png'%}" alt=""
                     style="cursor: pointer;" /></a>
         </div>
     </header>
@@ -26,7 +29,7 @@
         <section id="file-upload-modal" class="modal">
             <div class="modal-content">
                 <span class="close-button"><img src="{% static 'assets/icons/close.png'%}" alt="" /></span>
-                <h2>Chunk File <span>(1/2)</span></h2>
+                <h2>Upload File </h2>
                 <div class="inner-modal-content">
                     <form enctype="multipart/form-data" method="post">
                         {% csrf_token %}
@@ -35,22 +38,11 @@
                                 <input type="file" name="file" id="file" required />
                                 <img src="{% static 'assets/icons/file_upload.png'%}" alt="" />
                                 <p>Drop File Here or Browse</p>
-                                <p>CSV, JSON</p>
                                 <small id="name">File name</small>
                             </div>
                             <p>
-                                <small class="warning">File must not exceed 250 MB</small>
+                                <small class="warning" id="size">File must not exceed 250 MB</small>
                             </p>
-                        </div>
-                        <div class="form-control radio">
-                            <p>Select file type</p>
-                            <label for="csv"><input type="radio" name="type" id="csv" value="CSV" />
-                                <span>CSV</span>
-                            </label>
-                            <label for="json">
-                                <input type="radio" name="type" id="json" value="JSON" />
-                                <span>JSON</span>
-                            </label>
                         </div>
                         <div class="form-control">
                             <label for="chunks-number">File Name</label>
@@ -67,29 +59,6 @@
                 </div>
             </div>
         </section>
-        <section id="download-chunk-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-button"><img src="{% static 'assets/icons/close.png'%}" alt="" /></span>
-                <h2>Chunk File <span>(2/2)</span></h2>
-                <div class="inner-modal-content">
-                    <img src="{% static 'assets/images/download-folder.png'%}" alt="" class="top-img" />
-                    <small>Chunking Complete</small>
-                    <button class="primary">
-                        <span><img src="{% static 'assets/icons/file_download-light.png'%}"
-                                alt="file download icon" /></span>Download
-                        Zipped Files
-                    </button>
-
-                    <div class="download-later">
-                        <small>Or</small>
-                        <small>Download later. Your file will be saved in your library</small>
-                        <button class="complementary">
-                            <span><img src="{% static 'assets/icons/file_download.svg'%}"
-                                    alt="file download icon" /></span>Download
-                            Later</button>
-                    </div>
-                </div>
-        </section>
         <section class="backdrop"></section>
         <nav class="nav-drawer">
             <div class="top">
@@ -100,34 +69,74 @@
             <button class="file-upload btn-upload">+<small></small></button>
             <ul class="navigation">
                 <li class="active">
-                    <a href="{% url 'home'%}">
+                    <a href="">
                         <img src="{% static 'assets/icons/Folder-filled.png'%}" alt="" />
                         <small>Library</small>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'setting'%}">
+                    <a href="">
                         <img src="{% static 'assets/icons/manage_accounts.png'%}" alt="" />
                         <small>Account</small>
                     </a>
                 </li>
-                <li>
-                    <a href="{% url 'save_file'%}">
-                        <img src="{% static 'assets/icons/manage_accounts.png'%}" alt="" />
-                        <small>Save files</small>
-                    </a>
-                </li>
             </ul>
 
-            <small class="copy-right"><strong>&copy; 2022 ChunkIT, Inc</strong></small>
+            <small class="copy-right"><strong>&copy; 2024, Inc</strong></small>
         </nav>
         <section class="library-actions">
-            <button class="btn-delete">
-                <img src="{% static 'assets/icons/delete-icon-dark.png'%}" alt="" />
+            <button class="btn-delete" disabled>
+                <img src="{% static 'assets/icons/delete-enabled-icon.png'%}" alt="" />
             </button>
             <button class="btn-upload">+ Upload New File</button>
         </section>
-
+        {% if files %}
+        <section class="saved-files">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" name="" id="select-all" />
+                        </th>
+                        <th scope="col">File Name</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Last Modified</th>
+                        <th scope="col">Chunk files</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                   
+                    <tr>
+                        <td><input type="checkbox" name="" id="" /></td>
+                        <td>{{file.name}}</td>
+                        <td>5.41MB</td>
+                        <td>{{file.file_type}}</td>
+                        <td>
+                            <span class="date">{{file.date}}</span>
+                        </td>
+                        <td>{{file.chunk_number}}</td>
+                        <td>
+                            <div>
+                                <button class="btn-download">
+                                    <a href=""><img
+                                            src="{% static 'assets/icons/file_download.png'%}" alt="" /></a>
+                                </button>
+                                <button class="btn-delete">
+                                    <a href=""><img
+                                            src="{% static 'assets/icons/delete-icon-dark.png'%}" alt="" /></a>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        {% else %}
         <section class="page-content">
             {% for message in messages %}
             <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
@@ -141,13 +150,14 @@
             <p>Your library is empty. Upload a file to start chuncking.</p>
             <button class="btn-upload">Upload New File</button>
         </section>
-
+        {% endif %}
     </main>
 
+    <script src="{% static 'js/saved-files.js'%}"></script>
     <script src="{% static 'js/dashboard.js'%}"></script>
     <script>
         let button = document.getElementById('btn');
-        let digit = document.getElementById('number');
+        let digit = document.getElementById('chunks-number');
         let file = document.getElementById('file');
         let size = document.getElementById('size')
 
@@ -158,9 +168,21 @@
                 this.value = "";
             };
         };
-
+        function update() {
+            let nbytes = 0;
+            let nfiles = this.files;
+            for (let i = 0; i < nfiles.length; i++) {
+                nbytes += nfiles[i].size;
+            }
+            let output = nbytes + 'bytes';
+            let multiples = ['kb', 'mb', 'gb'];
+            for (j = 0, nApprox = nbytes / 1024; nApprox > 1; nApprox /= 1024, j++) {
+                output = 'chunk_size ' + (nApprox / digit.value).toFixed(2) + ' ' + multiples[j];
+            }
+            size.innerHTML = output
+        }
+        file.addEventListener('change', update)
     </script>
-
 </body>
 
 </html>
