@@ -13,6 +13,8 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from users.models import *
+from django.contrib.auth import login, logout
+
 # Create your views here.
 
 class DashboardView(PermissionRequiredMixin,View):
@@ -61,3 +63,28 @@ def file_delete(request, pk):
         'file':file
     }
     return render(request, "admin/delete.html",context)
+
+class ChangePasswordView(View):
+    template_name = "admin/account.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+    
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        current_password = request.POST['current']
+        new_password = request.POST['new_password']
+        try:
+            if not user.check_password(current_password):
+                messages.error(request, "Wrong Current Password")
+                return redirect(request.META.get("HTTP_REFERER"))
+            else:
+                user.set_password(new_password)
+                user.save()
+                user = EmailBackend.authenticate(self=self,request=request,email_address=user.email_address,password=new_password)
+                login(request,user)
+                messages.success(request, "Password Changed Successfully")
+                return redirect(request.META.get("HTTP_REFERER"))
+        except KeyError:
+            messages.error(request, "Password Change Failed")
+            return redirect(request.META.get("HTTP_REFERER"))
+        return render(request, self.template_name)

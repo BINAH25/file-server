@@ -17,7 +17,7 @@
             <img src="{% static 'assets/icons/logo.svg'%}" alt="chuck it logo" class="logo" />
         </div>
         <div class="user">
-            <small>{{user.username}}</small>
+            <small>{{user.email_address}}</small>
             <img src="{% static 'assets/icons/logout-icon.png'%}" alt="" onclick="toggleLogoutModal()" />
         </div>
     </header>
@@ -32,13 +32,13 @@
             <button class="file-upload btn-upload">+<small></small></button>
             <ul class="navigation">
                 <li>
-                    <a href="{% url 'save_file'%}">
+                    <a href="{% url 'files:dashboard' %}">
                         <img src="{% static 'assets/icons/Folder-filled.png'%}" alt="" />
                         <small>Library</small>
                     </a>
                 </li>
-                <li>
-                    <a href="{% url 'setting'%}">
+                <li class="active">
+                    <a href="{% url 'files:change-password' %}">
                         <img src="{% static 'assets/icons/manage_accounts.png'%}" alt="" />
                         <small>Account</small>
                     </a>
@@ -46,7 +46,7 @@
 
             </ul>
 
-            <small class="copy-right"><strong>&copy; 2022 ChunkIT, Inc</strong></small>
+            <small class="copy-right"><strong>&copy; 2024, Inc</strong></small>
         </nav>
         <section class="modal" id="delete-account-modal">
             <div class="modal-content">
@@ -63,7 +63,7 @@
             <div class="modal-content">
                 <h2>Log out</h2>
                 <p>Are you sure you want to log out?</p>
-                <button class="btn-danger"><a href="{% url 'signout'%}"
+                <button class="btn-danger"><a href="{% url 'users:log-out' %}"
                         style="cursor: pointer; color:inherit; text-decoration: none;">Log
                         out</a></button>
                 <button class="cancel">Cancel</button>
@@ -73,13 +73,15 @@
             <div class="account">
                 <div class="info">
                     <h4>Account</h4>
-                    <p>Name: <span>{{user.username}}</span></p>
-                    <p>Email: {{user.email}}</p>
+                    <p>Email: {{user.email_address}}</p>
                 </div>
                 {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                    {% if message.tags == "success"%}
+                    <p style="color: rgb(37, 195, 135);">{{message}}</p>
+                    {% else %}
                     <p style="color: red;">{{message}}</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {% endif %}
                 </div>
                 {% endfor %}
 
@@ -90,13 +92,13 @@
                         {% csrf_token %}
                         <div class="form-control">
                             <label for="current-password">Current password</label>
-                            <input type="password" name="old" id="current-password" placeholder="Password" />
+                            <input type="password" name="current" id="current-password" placeholder="Password" />
                             <img class="" id="toggle-current-password"
                                 src="{% static 'assets/icons/remove_red_eye.png'%}" alt="show password icon" />
                         </div>
                         <div class="form-control">
                             <label for="new-password">New password</label>
-                            <input type="password" name="new" id="new-password" placeholder="Password" />
+                            <input type="password" name="new_password" id="new-password" placeholder="Password" />
                             <img class="" id="toggle-new-password" src="{% static 'assets/icons/remove_red_eye.png'%}"
                                 alt="show password icon" />
                         </div>
@@ -120,6 +122,15 @@
         </section>
     </main>
     <script src="{% static 'js/settings.js'%}"></script>
+    <script>
+        // Function to remove error messages after 5 seconds
+        setTimeout(function() {
+            var alertMessages = document.querySelectorAll('.alert');
+            alertMessages.forEach(function(alert) {
+                alert.remove();
+            });
+        }, 5000);
+    </script>
 </body>
 
 </html>
