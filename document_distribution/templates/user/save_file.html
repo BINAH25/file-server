@@ -38,11 +38,22 @@
                                 <input type="file" name="file" id="file" required />
                                 <img src="{% static 'assets/icons/file_upload.png'%}" alt="" />
                                 <p>Drop File Here or Browse</p>
+                                <p>CSV, JSON</p>
                                 <small id="name">File name</small>
                             </div>
                             <p>
                                 <small class="warning" id="size">File must not exceed 250 MB</small>
                             </p>
+                        </div>
+                        <div class="form-control radio">
+                            <p>Select file type</p>
+                            <label for="csv"><input type="radio" name="type" id="csv" value="CSV" />
+                                <span>CSV</span>
+                            </label>
+                            <label for="json">
+                                <input type="radio" name="type" id="json" value="JSON" />
+                                <span>JSON</span>
+                            </label>
                         </div>
                         <div class="form-control">
                             <label for="chunks-number">File Name</label>
@@ -59,6 +70,29 @@
                 </div>
             </div>
         </section>
+        <section id="download-chunk-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button"><img src="{% static 'assets/icons/close.png'%}" alt="" /></span>
+                <h2>Chunk File <span>(2/2)</span></h2>
+                <div class="inner-modal-content">
+                    <img src="{% static 'assets/images/download-folder.png'%}" alt="" class="top-img" />
+                    <small>Chunking Complete</small>
+                    <button class="primary">
+                        <span><img src="{% static 'assets/icons/file_download-light.png'%}"
+                                alt="file download icon" /></span>Download
+                        Zipped Files
+                    </button>
+
+                    <div class="download-later">
+                        <small>Or</small>
+                        <small>Download later. Your file will be saved in your library</small>
+                        <button class="complementary">
+                            <span><img src="{% static 'assets/icons/file_download.svg'%}"
+                                    alt="file download icon" /></span>Download
+                            Later</button>
+                    </div>
+                </div>
+        </section>
         <section class="backdrop"></section>
         <nav class="nav-drawer">
             <div class="top">
@@ -69,13 +103,13 @@
             <button class="file-upload btn-upload">+<small></small></button>
             <ul class="navigation">
                 <li class="active">
-                    <a href="">
+                    <a href="{% url 'save_file'%}">
                         <img src="{% static 'assets/icons/Folder-filled.png'%}" alt="" />
                         <small>Library</small>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="{% url 'setting'%}">
                         <img src="{% static 'assets/icons/manage_accounts.png'%}" alt="" />
                         <small>Account</small>
                     </a>

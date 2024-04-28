@@ -208,25 +208,14 @@ li.active {
 .library-actions {
   position: absolute;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 100%;
   top: 5.5rem;
   padding-inline: 6rem 2rem;
   z-index: 1;
 }
 
-.library-actions .btn-delete {
-  border-radius: 4px;
-  background-color: #d43131;
-  border: none;
-  padding: 0.5rem;
-}
-.library-actions .btn-delete:disabled {
-  background-color: #cccccc;
-  /* border-radius: 4px;
-  border: none;
-  padding: 0.5rem; */
-}
+
 
 .btn-delete:disabled img {
   content: url("assets/icons/delete-disable-icon.png");
@@ -242,7 +231,18 @@ li.active {
   border: 1px solid var(--color-primary);
   background-color: var(--color-primary);
 }
-
+.box{
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: #fff;
+  font-family: inherit;
+  text-align: center;
+  font-weight: 700;
+  width: 20%;
+  cursor: pointer;
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary)
+}
 .page-content {
   position: absolute;
   top: 50%;

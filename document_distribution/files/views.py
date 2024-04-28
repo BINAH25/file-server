@@ -12,7 +12,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
-
+from users.models import *
 # Create your views here.
 
 class DashboardView(PermissionRequiredMixin,View):
@@ -22,7 +22,15 @@ class DashboardView(PermissionRequiredMixin,View):
         "files.view_file",
     ]
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        files = File.objects.all().order_by('-created_at')
+        files_count = File.objects.all().count()
+        users_count = User.objects.all().count()
+        context = {
+            'files':files,
+            'files_count':files_count,
+            'users_count':users_count
+        }
+        return render(request, self.template_name,context)
     
         
 
@@ -42,3 +50,14 @@ class UploadFile(View):
                 messages.error(request, message)
                 return redirect(request.META.get("HTTP_REFERER"))
 
+
+def file_delete(request, pk):
+    file = File.objects.get(id=pk)
+    if request.method == 'POST':
+        file.delete()
+        messages.success(request, "File Deleted Successfully")
+        return redirect('files:dashboard')
+    context = {
+        'file':file
+    }
+    return render(request, "admin/delete.html",context)

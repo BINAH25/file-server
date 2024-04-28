@@ -21,7 +21,7 @@
         </div>
         <div class="user">
             <small>{{user.email_address}}</small>
-            <a href=""><img src="{% static 'assets/icons/logout-icon.png'%}" alt=""
+            <a href="{% url 'users:log-out' %}"><img src="{% static 'assets/icons/logout-icon.png'%}" alt=""
                     style="cursor: pointer;" /></a>
         </div>
     </header>
@@ -44,6 +44,30 @@
                                 <small class="warning" id="size">File must not exceed 250 MB</small>
                             </p>
                         </div>
+                        <div class="form-control radio">
+                            <p>Select file type</p>
+                            <label for="doc"><input type="radio" name="type" id="doc" value="DOC" />
+                                <span>DOC</span>
+                            </label>
+                            <label for="pdf">
+                                <input type="radio" name="type" id="pdf" value="PDF" />
+                                <span>PDF</span>
+                            </label>
+                            <label for="jpg"><input type="radio" name="type" id="jpg" value="JPG" />
+                                <span>JPG</span>
+                            </label>
+                            <label for="png">
+                                <input type="radio" name="type" id="png" value="PNG" />
+                                <span>PNG</span>
+                            </label>
+                            <label for="csv"><input type="radio" name="type" id="csv" value="CSV" />
+                                <span>CSV</span>
+                            </label>
+                            <label for="json">
+                                <input type="radio" name="type" id="json" value="JSON" />
+                                <span>JSON</span>
+                            </label>
+                        </div>
                         <div class="form-control">
                             <label for="Title">File Title</label>
                             <input type="text" id="name" name="title" required placeholder="Enter File Title" />
@@ -59,6 +83,7 @@
                 </div>
             </div>
         </section>
+        
         <section class="backdrop"></section>
         <nav class="nav-drawer">
             <div class="top">
@@ -69,7 +94,7 @@
             <button class="file-upload btn-upload">+<small></small></button>
             <ul class="navigation">
                 <li class="active">
-                    <a href="">
+                    <a href="{% url 'files:dashboard' %}">
                         <img src="{% static 'assets/icons/Folder-filled.png'%}" alt="" />
                         <small>Library</small>
                     </a>
@@ -85,10 +110,22 @@
             <small class="copy-right"><strong>&copy; 2024, Inc</strong></small>
         </nav>
         <section class="library-actions">
-            <button class="btn-delete" disabled>
-                <img src="{% static 'assets/icons/delete-enabled-icon.png'%}" alt="" />
-            </button>
-            <button class="btn-upload">+ Upload New File</button>
+            <div class="box">
+                <h1>Total Downloads</h1>
+                <span style="text-align: center;">12</span>
+            </div>
+            <div class="box">
+                <h1>Total Email Sent</h1>
+                <span style="text-align: center;">12</span>
+            </div>
+            <div class="box">
+                <h1>Total Files </h1>
+                <span style="text-align: center;">{{files_count}}</span>
+            </div>
+            <div class="box">
+                <h1>Total Users </h1>
+                <span style="text-align: center;">{{users_count}}</span>
+            </div>
         </section>
         {% if files %}
         <section class="saved-files">
@@ -98,12 +135,12 @@
                         <th>
                             <input type="checkbox" name="" id="select-all" />
                         </th>
-                        <th scope="col">File Name</th>
-                        <th scope="col">Size</th>
+                        <th scope="col">File Title</th>
                         <th scope="col">Type</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Last Modified</th>
-                        <th scope="col">Chunk files</th>
-                        <th scope="col"></th>
+                        <th scope="col">Downloads</th>
+                        <th scope="col">Email Sents</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,21 +148,24 @@
                    
                     <tr>
                         <td><input type="checkbox" name="" id="" /></td>
-                        <td>{{file.name}}</td>
-                        <td>5.41MB</td>
-                        <td>{{file.file_type}}</td>
+                        <td>{{file.title}}</td>
+                        <td>{{file.type}}</td>
                         <td>
-                            <span class="date">{{file.date}}</span>
+                            <textarea style="border: none; resize: none;" rows="2" cols="40" readonly>{{ file.description }}</textarea>
                         </td>
-                        <td>{{file.chunk_number}}</td>
+                        <td>
+                            <span class="date">{{file.created_at}}</span>
+                        </td>
+                        <td>{{file.downloads}}</td>
+                        <td>{{file.emails_sent}}</td>
                         <td>
                             <div>
                                 <button class="btn-download">
-                                    <a href=""><img
+                                    <a href="{{file.file.url}}" download="{{file.file.url}}"><img
                                             src="{% static 'assets/icons/file_download.png'%}" alt="" /></a>
                                 </button>
                                 <button class="btn-delete">
-                                    <a href=""><img
+                                    <a href=" {% url 'files:delete' file.id %}"><img
                                             src="{% static 'assets/icons/delete-icon-dark.png'%}" alt="" /></a>
                                 </button>
                             </div>
@@ -147,7 +187,6 @@
                     {% endif %}
                 </div>
             {% endfor %}
-
             <img src="{% static 'assets/images/image.png'%}" alt="download folder image" />
             <p>Your library is empty. Upload a file</p>
             <button class="btn-upload">Upload New File</button>
@@ -178,7 +217,7 @@
             alertMessages.forEach(function(alert) {
                 alert.remove();
             });
-        }, 5000);
+        }, 7000);
     </script>
 </body>
 
