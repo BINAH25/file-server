@@ -9,3 +9,7 @@ class File(models.Model):
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     downloads = models.IntegerField(default=0)
     emails_sent = models.IntegerField(default=0)
+    
+    
+    def __str__(self):
+        return self.title

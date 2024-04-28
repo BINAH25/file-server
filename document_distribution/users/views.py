@@ -11,6 +11,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 import re
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import login, logout
 
 # Create your views here.
 
@@ -103,7 +104,12 @@ class LoginView(View):
         email_address = request.POST['email_address']
         password = request.POST['password']
         if User.objects.filter(email_address=email_address): 
-            user = EmailBackEnd.authenticate(request,email_address=email_address,password=password)
+            user = EmailBackend.authenticate(self=self,request=request,email_address=email_address,password=password)
+            
+            if user is not None and user.is_staff and user.is_superuser:
+                login(request, user)
+                return redirect('files:dashboard')
+            
             if user !=None:
                 login(request,user)
                 messages.success(request, "Email Verified")
@@ -118,11 +124,11 @@ class LoginView(View):
         return render(request, self.template_name)
     
     
-class DashboardView(View):
-    template_name = "user/dashboard.html"
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+class LogoutView(View):
 
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('/')
     
 
     
