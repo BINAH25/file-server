@@ -19,6 +19,15 @@
         <div>
             <img src="{% static 'assets/icons/logo.svg'%}" alt="chuck it logo" class="logo" />
         </div>
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            {% if message.tags == "success"%}
+            <p style="color: rgb(37, 195, 135);">{{message}}</p>
+            {% else %}
+            <p style="color: red;">{{message}}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
         <div class="user">
             <small>{{user.email_address}}</small>
             <a href="{% url 'users:log-out' %}"><img src="{% static 'assets/icons/logout-icon.png'%}" alt=""
@@ -46,25 +55,28 @@
                         </div>
                         <div class="form-control radio">
                             <p>Select file type</p>
-                            <label for="doc"><input type="radio" name="type" id="doc" value="DOC" />
+                            <label for="doc">
+                                <input type="radio" name="type" id="doc" value="DOC" required/>
                                 <span>DOC</span>
                             </label>
                             <label for="pdf">
-                                <input type="radio" name="type" id="pdf" value="PDF" />
+                                <input type="radio" name="type" id="pdf" value="PDF" required/>
                                 <span>PDF</span>
                             </label>
-                            <label for="jpg"><input type="radio" name="type" id="jpg" value="JPG" />
+                            <label for="jpg">
+                                <input type="radio" name="type" id="jpg" value="JPG" required/>
                                 <span>JPG</span>
                             </label>
                             <label for="png">
-                                <input type="radio" name="type" id="png" value="PNG" />
+                                <input type="radio" name="type" id="png" value="PNG" required />
                                 <span>PNG</span>
                             </label>
-                            <label for="csv"><input type="radio" name="type" id="csv" value="CSV" />
+                            <label for="csv">
+                                <input type="radio" name="type" id="csv" value="CSV" required />
                                 <span>CSV</span>
                             </label>
                             <label for="json">
-                                <input type="radio" name="type" id="json" value="JSON" />
+                                <input type="radio" name="type" id="json" value="JSON"  required/>
                                 <span>JSON</span>
                             </label>
                         </div>
@@ -112,7 +124,7 @@
         <section class="library-actions">
             <div class="box">
                 <h1>Total Downloads</h1>
-                <span style="text-align: center;">12</span>
+                <span style="text-align: center;">{{total_downloads}}</span>
             </div>
             <div class="box">
                 <h1>Total Email Sent</h1>
@@ -132,9 +144,6 @@
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" name="" id="select-all" />
-                        </th>
                         <th scope="col">File Title</th>
                         <th scope="col">Type</th>
                         <th scope="col">Description</th>
@@ -147,7 +156,6 @@
                     {% for file in files %}
                    
                     <tr>
-                        <td><input type="checkbox" name="" id="" /></td>
                         <td>{{file.title}}</td>
                         <td>{{file.type}}</td>
                         <td>
@@ -161,7 +169,7 @@
                         <td>
                             <div>
                                 <button class="btn-download">
-                                    <a href="{{file.file.url}}" download="{{file.file.url}}"><img
+                                    <a href="{% url 'files:download' file.id %}" ><img
                                             src="{% static 'assets/icons/file_download.png'%}" alt="" /></a>
                                 </button>
                                 <button class="btn-delete">
@@ -178,21 +186,13 @@
         </section>
         {% else %}
         <section class="page-content">
-            {% for message in messages %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                    {% if message.tags == "success"%}
-                    <p style="color: rgb(37, 195, 135);">{{message}}</p>
-                    {% else %}
-                    <p style="color: red;">{{message}}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
             <img src="{% static 'assets/images/image.png'%}" alt="download folder image" />
             <p>Your library is empty. Upload a file</p>
             <button class="btn-upload">Upload New File</button>
         </section>
         {% endif %}
     </main>
+    
 
     <script src="{% static 'js/saved-files.js'%}"></script>
     <script src="{% static 'js/dashboard.js'%}"></script>

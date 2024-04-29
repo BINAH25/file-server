@@ -1,36 +1,39 @@
 from django.contrib import messages
-from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from django.views import View
 from files.models import *
 from files.forms import *
-from utils.function import generate_activation_code
-from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,HttpResponse
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from users.models import *
 from django.contrib.auth import login, logout
+from django.db.models import Sum
 
 # Create your views here.
 
 class DashboardView(PermissionRequiredMixin,View):
     template_name = "admin/dashboard.html"
+    # Permission needed for accessing the admin dashboard
     permission_required = [
         "files.add_file",
         "files.view_file",
     ]
+    
+    # Get all files, users, downloads 
     def get(self, request, *args, **kwargs):
         files = File.objects.all().order_by('-created_at')
         files_count = File.objects.all().count()
         users_count = User.objects.all().count()
+        total_downloads = File.objects.aggregate(total_downloads=Sum('downloads'))['total_downloads']
         context = {
             'files':files,
             'files_count':files_count,
-            'users_count':users_count
+            'users_count':users_count,
+            'total_downloads':total_downloads
         }
         return render(request, self.template_name,context)
     
@@ -38,6 +41,7 @@ class DashboardView(PermissionRequiredMixin,View):
 
 class UploadFile(View):
     form_class = FileForm
+    """For uploading file by the admin"""
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST,request.FILES)
         if form.is_valid():
@@ -54,6 +58,7 @@ class UploadFile(View):
 
 
 def file_delete(request, pk):
+    """For deleting file """
     file = File.objects.get(id=pk)
     if request.method == 'POST':
         file.delete()
@@ -64,12 +69,29 @@ def file_delete(request, pk):
     }
     return render(request, "admin/delete.html",context)
 
+
+def download_file(request, pk):
+    """For downloading file and increase file download for each file by 1"""
+    file_instance = get_object_or_404(File, id=pk)
+    file_instance.downloads += 1
+    file_instance.save()
+    
+    response = HttpResponse(file_instance.file, content_type='application/force-download')
+    response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
+    return response
+    return redirect(request.META.get("HTTP_REFERER"))
+
+
 class ChangePasswordView(View):
     template_name = "admin/account.html"
+    
+    @method_decorator(login_required(login_url="/"))
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
+    @method_decorator(login_required(login_url="/"))
     def post(self, request, *args, **kwargs):
+        """For changing password"""
         user = request.user
         current_password = request.POST['current']
         new_password = request.POST['new_password']
