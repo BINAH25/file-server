@@ -26,9 +26,13 @@ class Register(View):
         email_address = request.POST.get("email_address")
         password = request.POST.get("password")
         
+        if len(password) < 4:
+            messages.error(request, "Password Must be at least 4 characters")
+            return redirect(request.META.get("HTTP_REFERER"))
+        
         # Validate email address format
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email_address):
-            messages.error(request, "Invalid email address")
+            messages.error(request, "Invalid email address format")
             return redirect(request.META.get("HTTP_REFERER"))
 
         
@@ -130,7 +134,94 @@ class LogoutView(View):
         logout(request)
         return redirect('/')
     
+    
+    
+class ResetPasswordView(View):
+    template_name = "user/reset_password.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+    
+    
+    def post(self, request, *args, **kwargs):
+        email_address = request.POST['email_address']
+        ''' User was sent verication code but do not receive it sent it again'''
+        if User.objects.filter(email_address=email_address) and CodeEmail.objects.filter(email_address=email_address):
+            code_user = CodeEmail.objects.get(email_address=email_address)
+            verification_code = generate_activation_code()
+            code_user.code = verification_code
+            code_user.save()
+            context = {
+            "verification_code": verification_code,
+            }
+            html_message = render_to_string("user/reset_code.html",context)
+            plain_message = strip_tags(html_message)
+            try:
+                message = EmailMultiAlternatives(
+                subject="Password Reset Verification Code",
+                body=plain_message,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[email_address],
+            )
+                message.attach_alternative(html_message, 'text/html')
+                message.send()
+                messages.success(request, "Password Reset Verification Code Sent to Email")
+                return redirect('users:password_reset_done')
+            except Exception as e:
+                print(f"Error sending email: {e}")
+                
+        elif User.objects.filter(email_address=email_address):
+            verification_code = generate_activation_code()
+            code_user = CodeEmail.objects.create(email_address=email_address,code=verification_code)
+            code_user.save()
+            context = {
+            "verification_code": verification_code,
+            }
+            html_message = render_to_string("user/reset_code.html",context)
+            plain_message = strip_tags(html_message)
+            try:
+                message = EmailMultiAlternatives(
+                subject="Password Reset Verification Code",
+                body=plain_message,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[email_address],
+            )
+                message.attach_alternative(html_message, 'text/html')
+                message.send()
+                messages.success(request, "Password Reset Verification Code Sent to Email")
+                return redirect('users:password_reset_done')
+            except Exception as e:
+                print(f"Error sending email: {e}")
+                
+        else:
+            messages.error(request, "User Not Found")
+            return redirect(request.META.get("HTTP_REFERER"))
+        return render(request, self.template_name)
 
     
+class PasswordResetDone(View):
+    template_name = "user/password_reset_done.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
     
-    
+    ''' Verifying the code and reseting the password'''
+    def post(self, request, *args, **kwargs):
+        code = request.POST.get("code")
+        password = request.POST.get("password")
+        if len(password) < 4:
+            messages.error(request, "Password Must be at least 4 characters")
+            return redirect(request.META.get("HTTP_REFERER"))
+        
+        try: 
+            code_email = CodeEmail.objects.get(code=code)
+            user = User.objects.get(email_address=code_email.email_address)
+            user.set_password(password)
+            user.save()
+            code_email.delete()
+            messages.success(request, "Password Reset Successfully")
+            return redirect('/')
+            
+        except CodeEmail.DoesNotExist:
+            messages.error(request, "Invalid or Wrong Password Verification Code Entered")
+            return redirect(request.META.get("HTTP_REFERER"))
+
+        return render(request, self.template_name)
