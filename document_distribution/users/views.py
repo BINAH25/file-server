@@ -109,15 +109,15 @@ class LoginView(View):
         password = request.POST['password']
         if User.objects.filter(email_address=email_address): 
             user = EmailBackend.authenticate(self=self,request=request,email_address=email_address,password=password)
-            
-            if user is not None and user.is_staff and user.is_superuser:
-                login(request, user)
-                return redirect('files:dashboard')
-            
-            if user !=None:
+
+            if user is not None:
+                print('user:', user)
                 login(request,user)
-                messages.success(request, "Email Verified")
-                return redirect(request.META.get("HTTP_REFERER"))
+                if user.is_authenticated:
+                    print('yes')
+                else:
+                    print('no')
+                return redirect('files:user-dashboard')
             else:
                 messages.error(request,"Invalid Login Details")
                 return redirect(request.META.get("HTTP_REFERER"))
@@ -144,7 +144,7 @@ class ResetPasswordView(View):
     
     def post(self, request, *args, **kwargs):
         email_address = request.POST['email_address']
-        ''' User was sent verication code but do not receive it sent it again'''
+        ''' For sending Password Reset Verification Code again after the first attempt'''
         if User.objects.filter(email_address=email_address) and CodeEmail.objects.filter(email_address=email_address):
             code_user = CodeEmail.objects.get(email_address=email_address)
             verification_code = generate_activation_code()
@@ -168,7 +168,8 @@ class ResetPasswordView(View):
                 return redirect('users:password_reset_done')
             except Exception as e:
                 print(f"Error sending email: {e}")
-                
+            
+            ''' For sending password reset verification code to user for first time '''       
         elif User.objects.filter(email_address=email_address):
             verification_code = generate_activation_code()
             code_user = CodeEmail.objects.create(email_address=email_address,code=verification_code)
@@ -225,3 +226,5 @@ class PasswordResetDone(View):
             return redirect(request.META.get("HTTP_REFERER"))
 
         return render(request, self.template_name)
+    
+    

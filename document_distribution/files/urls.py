@@ -9,5 +9,7 @@ urlpatterns = [
     path('delete/<int:pk>/', views.file_delete, name="delete"),
     path('download/<int:pk>/', views.download_file, name="download"),
     path('change-password', views.ChangePasswordView.as_view(), name="change-password"),
+    path("user-dashboard", views.UserDashboard.as_view(), name="user-dashboard"),
+
    
 ]

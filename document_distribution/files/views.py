@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.views import View
 from files.models import *
 from files.forms import *
@@ -10,6 +9,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404,HttpResponse
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from users.models import *
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.db.models import Sum
 
@@ -110,3 +110,16 @@ class ChangePasswordView(View):
             messages.error(request, "Password Change Failed")
             return redirect(request.META.get("HTTP_REFERER"))
         return render(request, self.template_name)
+    
+    
+class UserDashboard(View):
+    template_name = "user/user_dashboard.html"
+    #@method_decorator(login_required(login_url="/"))
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        print(user)
+        context = {
+            'user':user
+        }
+        return render(request, self.template_name,context)
+    
