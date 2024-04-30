@@ -42,8 +42,28 @@ class Register(View):
             return redirect(request.META.get("HTTP_REFERER"))
         
         if CodeEmail.objects.filter(email_address=email_address):
-            messages.error(request, "Email Already Exist Verify Your Account to Login")
-            return redirect("users:verify")
+            code_user = CodeEmail.objects.get(email_address=email_address)
+            generated_code = generate_activation_code()
+            code_user.code = generated_code
+            code_user.save()
+            context = {
+            "generated_code": generated_code,
+            }
+            html_message = render_to_string("user/verify.html",context)
+            plain_message = strip_tags(html_message)
+            try:
+                message = EmailMultiAlternatives(
+                subject="Email Verification Code",
+                body=plain_message,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[email_address],
+            )
+                message.attach_alternative(html_message, 'text/html')
+                message.send()
+                messages.success(request, "Email Verification Code Sent to Email")
+                return redirect("users:verify")
+            except Exception as e:
+                print(f"Error sending email: {e}")
         
         # Generate Verification Code
         generated_code = generate_activation_code()
@@ -58,7 +78,7 @@ class Register(View):
         # Send Email with verification Code  to User Email 
         try:
             message = EmailMultiAlternatives(
-            subject="Password Reset Verification Code",
+            subject="Email Verification Code",
             body=plain_message,
             from_email=settings.EMAIL_HOST_USER,
             to=[email_address],

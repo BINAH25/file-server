@@ -12,6 +12,7 @@ from users.models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.db.models import Sum
+from django.db.models import Q
 
 # Create your views here.
 
@@ -129,4 +130,16 @@ class UserAccounView(View):
     @method_decorator(login_required(login_url="/"))
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+    
+    
+class SearchView(View):
+    template_name = "user/search.html"
+    @method_decorator(login_required(login_url="/"))
+    def post(self, request, *args, **kwargs):
+        kw = request.POST['keyword']
+        files = File.objects.filter(Q(title__icontains=kw) | Q(description__icontains=kw) | Q(type__icontains=kw))
+        context = {
+            'files':files
+        }
+        return render(request, self.template_name, context)
     

@@ -35,7 +35,7 @@ body {
   border-collapse: collapse;
   width: 100%;
   min-width: 740px;
-  margin-top: 50px;
+  
   /* height: fit-content; */
   text-align: left;
   overflow-x: scroll;

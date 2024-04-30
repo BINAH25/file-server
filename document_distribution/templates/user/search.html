@@ -20,7 +20,7 @@
             <img src="{% static 'assets/icons/logo.svg'%}" alt="chuck it logo" class="logo" />
         </div>
       
-        <form method="post" action="" class="search">
+        <form method="post" action="{% url 'files:search-file' %}" class="search">
             {% csrf_token %}
             <div style="display: flex; gap:10px">
                 
@@ -48,13 +48,13 @@
 
             <ul class="navigation">
                 <li class="active">
-                    <a href="{% url 'files:dashboard' %}">
+                    <a href="{% url 'files:user-dashboard' %}">
                         <img src="{% static 'assets/icons/Folder-filled.png'%}" alt="" />
                         <small>Library</small>
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'files:change-password' %}">
+                    <a href="{% url 'files:user-account' %}">
                         <img src="{% static 'assets/icons/manage_accounts.png'%}" alt="" />
                         <small>Account</small>
                     </a>
@@ -66,13 +66,15 @@
         
         {% if files %}
         <section class="saved-files">
-            <table>
+            <h1> Search Result(s) for  <span style="color: #301e4e;"> {{request.POST.keyword}} </span> </h1>
+            <table style="margin: 20px;">
                 <thead>
                     <tr>
                         <th scope="col">File Title</th>
                         <th scope="col">Type</th>
                         <th scope="col">Description</th>
                         <th scope="col">Last Modified</th>
+                        <th scope="col">Actions</th>
                         
                     </tr>
                 </thead>
@@ -110,7 +112,7 @@
         {% else %}
         <section class="page-content">
             <img src="{% static 'assets/images/image.png'%}" alt="download folder image" />
-            <p>No Result(s) Found for your Search.</p>
+            <p>Sorry, no result(s) found for  <span style="color: #301e4e;"> {{request.POST.keyword}}</span></p>
         </section>
         {% endif %}
     </main>

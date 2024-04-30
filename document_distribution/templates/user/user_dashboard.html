@@ -20,7 +20,7 @@
             <img src="{% static 'assets/icons/logo.svg'%}" alt="chuck it logo" class="logo" />
         </div>
       
-        <form method="post" action="" class="search">
+        <form method="post" action="{% url 'files:search-file' %}" class="search">
             {% csrf_token %}
             <div style="display: flex; gap:10px">
                 
@@ -73,6 +73,7 @@
                         <th scope="col">Type</th>
                         <th scope="col">Description</th>
                         <th scope="col">Last Modified</th>
+                        <th scope="col">Actions</th>
                         
                     </tr>
                 </thead>

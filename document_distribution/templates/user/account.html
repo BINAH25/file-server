@@ -54,9 +54,9 @@
                     Are you sure you want to delete your account? All saved files will
                     be lost forever.
                 </p>
-                <input type="text" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="user_id" value="{{user.id}}">
                 <button class="btn-danger" type="submit">Delete Acount</button>
-                <button class="cancel">Cancel</button>
+                <button type="button" class="cancel">Cancel</button>
             </div>
         </form>
         <section class="modal" id="logout-modal">

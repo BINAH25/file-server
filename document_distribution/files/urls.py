@@ -12,6 +12,7 @@ urlpatterns = [
     path('change-password', views.ChangePasswordView.as_view(), name="change-password"),
     path("user-dashboard", views.UserDashboard.as_view(), name="user-dashboard"),
     path("user-account", views.UserAccounView.as_view(), name="user-account"),
+    path("search-file", views.SearchView.as_view(), name="search-file"),
 
    
 ]
