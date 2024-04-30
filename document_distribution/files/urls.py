@@ -13,6 +13,7 @@ urlpatterns = [
     path("user-dashboard", views.UserDashboard.as_view(), name="user-dashboard"),
     path("user-account", views.UserAccounView.as_view(), name="user-account"),
     path("search-file", views.SearchView.as_view(), name="search-file"),
+    path("send-file-via-email/<int:pk>/", views.SendFileViaEmail.as_view(), name="send-file-via-email"),
 
    
 ]

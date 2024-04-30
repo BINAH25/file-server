@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DELETE</title>
+    <title>Send File Via Email</title>
     <!-- <link rel="stylesheet" href="dashboard.css" /> -->
     <link rel="stylesheet" href="{% static 'css/detele.css'%}">
 </head>
@@ -29,17 +29,15 @@
                 <img src="{% static 'assets/icons/menu.png'%}" alt="" class="hamburger" />
                 <img src="{% static 'assets/icons/logo.svg'%}" alt="chunck it logo" class="logo" />
             </div>
-
-            <button class="file-upload btn-upload">+<small></small></button>
             <ul class="navigation">
                 <li class="active">
-                    <a href="{% url 'files:dashboard' %}">
+                    <a href=" {% url 'files:user-dashboard' %}">
                         <img src="{% static 'assets/icons/Folder-filled.png'%}" alt="" />
                         <small>Library</small>
                     </a>
                 </li>
                 <li>
-                    <a href=" {% url 'files:account' %}">
+                    <a href="{% url 'files:user-account' %}">
                         <img src="{% static 'assets/icons/manage_accounts.png'%}" alt="" />
                         <small>Account</small>
                     </a>
@@ -49,17 +47,12 @@
             <small class="copy-right"><strong>&copy; 2024, Inc</strong></small>
         </nav>
         <div class="chunk-content">
-            <h2>Confirm Deletion</h2>
-            <form method="post" class="inner-modal-content">
+            <form method="post" class="inner-modal-content" action="{% url 'files:send-file-via-email' file.id %}">
                 {% csrf_token %}
-                <p>
-                    Are you sure you want to delete this file and its chunked files?
-                </p>
-                <p>
-                    <span id="name"><strong>{{file}}</strong></span>
-                </p>
-                <button type="submit" class="danger">Delete</button>
-                <button class="cancel"><a href="{% url 'files:dashboard' %}"
+                <label style="margin-left: -230px;" for="email">Email Address </label>
+                <input type="email" name="email_address" id="" required placeholder="example@gmail.com">
+                <button type="submit" class="email">Email File</button>
+                <button class="cancel"><a href=" {% url 'files:user-dashboard' %}"
                         style="text-decoration: none; color:inherit;">Cancel</a>
                 </button>
             </form>
@@ -67,7 +60,7 @@
     </main>
 
     <!-- <script src="dashboard.js"></script> -->
-    <script src="{% static 'js/dashboard-chunk.js'%}"></script>
+    <script src="{% static 'js/settings.js'%}"></script>
 </body>
 
 </html>

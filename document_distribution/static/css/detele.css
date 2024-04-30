@@ -319,6 +319,13 @@ li.active {
   margin-top: 1rem;
 }
 
+.inner-modal-content .email {
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: #fff;
+  margin-top: 1rem;
+}
+
 .chunk-content .cancel {
   margin-top: 0;
   border: 1px solid var(--color-primary);
@@ -521,6 +528,18 @@ span {
   background-color: var(--color-primary);
   border: 1px solid var(--color-primary);
 }
+
+.inner-modal-content input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.3rem;
+  border: 1px solid #999999;
+  border-radius: 4px;
+  font-family: inherit;
+  outline: none;
+}
+
+
 
 @media (max-width: 500px) {
   .nav-drawer {

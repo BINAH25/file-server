@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.db.models import Sum
 from django.db.models import Q
+from django.core.mail import EmailMessage
 
 # Create your views here.
 
@@ -126,7 +127,6 @@ class UserDashboard(View):
     
 class UserAccounView(View):
     template_name = "user/account.html"
-    
     @method_decorator(login_required(login_url="/"))
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
@@ -136,10 +136,43 @@ class SearchView(View):
     template_name = "user/search.html"
     @method_decorator(login_required(login_url="/"))
     def post(self, request, *args, **kwargs):
+        """For returning searched file """
         kw = request.POST['keyword']
         files = File.objects.filter(Q(title__icontains=kw) | Q(description__icontains=kw) | Q(type__icontains=kw))
         context = {
             'files':files
         }
         return render(request, self.template_name, context)
+    
+    
+class SendFileViaEmail(View):
+    template_name = "user/send_file.html"
+    @method_decorator(login_required(login_url="/"))
+    def get(self, request,pk):
+        """For getting the file to be sent via email"""
+        file = File.objects.get(id=pk)
+        context = {
+            'file':file
+        }
+        return render(request, self.template_name,context)
+    
+    @method_decorator(login_required(login_url="/"))
+    def post(self,request, pk, *args, **kwargs):
+        """For getting absolute path of the and sending it to the email provided"""
+        email_address = request.POST['email_address']
+        file = File.objects.get(id=pk)
+        url = file.file.url
+        url = str(settings.BASE_DIR)+url
+        email = EmailMessage(
+            file.title,
+            file.description,
+            settings.EMAIL_HOST_USER,
+            [email_address]
+        )
+        email.attach_file(
+            url
+        )
+        email.send()
+        return redirect(request.META.get("HTTP_REFERER"))
+        return render(request, self.template_name)
     

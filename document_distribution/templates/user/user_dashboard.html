@@ -73,7 +73,8 @@
                         <th scope="col">Type</th>
                         <th scope="col">Description</th>
                         <th scope="col">Last Modified</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col">download File</th>
+                        <th scope="col">Email File</th>
                         
                     </tr>
                 </thead>
@@ -96,9 +97,13 @@
                                     <a href="{% url 'files:download' file.id %}" ><img
                                             src="{% static 'assets/icons/file_download.png'%}" alt="" /></a>
                                 </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
                                 <button class="btn-delete">
-                                    <a href=""><img
-                                            src="{% static 'assets/icons/delete-icon-dark.png'%}" alt="" /></a>
+                                    <a href="{% url 'files:send-file-via-email' file.id %}"><img style="width: 50%; height:50%"
+                                            src="{% static 'assets/icons/send.png'%}" alt="" /></a>
                                 </button>
                             </div>
                         </td>
