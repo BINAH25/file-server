@@ -11,7 +11,8 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 import re
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
+User = get_user_model()
 
 # Create your views here.
 
@@ -57,15 +58,15 @@ class Register(View):
         # Send Email with verification Code  to User Email 
         try:
             message = EmailMultiAlternatives(
-                subject="Email Verification Code",
-                body=plain_message,
-                from_email=settings.EMAIL_HOST_USER,
-                to=[email_address],
+            subject="Password Reset Verification Code",
+            body=plain_message,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[email_address],
             )
             message.attach_alternative(html_message, 'text/html')
             message.send()
             messages.success(request, "Email Verification Code Sent to Email")
-            return redirect(request.META.get("HTTP_REFERER"))
+            return redirect("users:verify")
         except Exception as e:
             print(f"Error sending email: {e}")
     
@@ -83,12 +84,11 @@ class CodeVerificationView(View):
         try:
             
             code_email = CodeEmail.objects.get(code=code)
-            user = User.objects.create_user(email_address=code_email.email_address)
-            user.set_password(code_email.password)
+            user = User.objects.create_user(username=code_email.email_address, email_address=code_email.email_address, password=code_email.password)
             user.save()
             code_email.delete()
             messages.success(request, "Email Verified")
-            return redirect(request.META.get("HTTP_REFERER"))
+            return redirect('files:user-dashboard')
             
         except CodeEmail.DoesNotExist:
             messages.error(request, "Invalid or Wrong Code Entered")
@@ -108,15 +108,13 @@ class LoginView(View):
         email_address = request.POST['email_address']
         password = request.POST['password']
         if User.objects.filter(email_address=email_address): 
-            user = EmailBackend.authenticate(self=self,request=request,email_address=email_address,password=password)
-
+            user = authenticate(request, email_address=email_address, password=password)
+            
+            if user is not None and user.is_staff and user.is_superuser:
+                login(request, user)
+                return redirect('files:dashboard')
             if user is not None:
-                print('user:', user)
                 login(request,user)
-                if user.is_authenticated:
-                    print('yes')
-                else:
-                    print('no')
                 return redirect('files:user-dashboard')
             else:
                 messages.error(request,"Invalid Login Details")

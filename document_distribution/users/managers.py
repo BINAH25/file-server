@@ -1,29 +1,25 @@
 from django.contrib.auth.models import BaseUserManager
 
+class CustomUserManager(BaseUserManager):
+    def create_superuser(self, email_address, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
 
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
 
-class UserManager(BaseUserManager):
-    """Registration of the user using the BaseUserManager to create a superuser"""
+        return self._create_user(email_address, password, **extra_fields)
 
-    def create_user(self, email_address, first_name=None,other_names=None, password=None):
-        """Creation of user"""
+    def create_user(self, email_address, password=None, **extra_fields):
         if not email_address:
-            raise ValueError("user must have email address")
+            raise ValueError('The Email Address field must be set')
+        email_address = self.normalize_email(email_address)
+        return self._create_user(email_address, password, **extra_fields)
 
-        user = self.model(
-            email_address=email_address,
-            first_name=first_name,other_names=other_names
-        )
+    def _create_user(self, email_address, password, **extra_fields):
+        user = self.model(email_address=email_address, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email_address, password, first_name=None,other_names=None):
-        """Creation of a superuser"""
-        user = self.create_user( email_address=email_address,first_name=first_name,other_names=other_names, password=password)
-        user.is_admin = True
-        user.is_active = True
-        user.is_staff = True
-        user.is_superuser = True
         user.save(using=self._db)
         return user

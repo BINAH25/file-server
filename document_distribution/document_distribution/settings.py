@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "users",
+    "users.apps.UsersConfig",
     "files",
 ]
 
@@ -114,9 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
-AUTHENTICATION_BACKENDS = [
-    "users.models.EmailBackend"
-]
+
 LOGIN_URL = '/'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

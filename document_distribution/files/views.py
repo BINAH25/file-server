@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404,HttpResponse
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from users.models import *
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.db.models import Sum
 
 # Create your views here.
@@ -102,7 +102,7 @@ class ChangePasswordView(View):
             else:
                 user.set_password(new_password)
                 user.save()
-                user = EmailBackend.authenticate(self=self,request=request,email_address=user.email_address,password=new_password)
+                user = authenticate(request, email_address=user.email_address, password=new_password)
                 login(request,user)
                 messages.success(request, "Password Changed Successfully")
                 return redirect(request.META.get("HTTP_REFERER"))
@@ -114,12 +114,9 @@ class ChangePasswordView(View):
     
 class UserDashboard(View):
     template_name = "user/user_dashboard.html"
-    #@method_decorator(login_required(login_url="/"))
+    @method_decorator(login_required(login_url="/"))
     def get(self, request, *args, **kwargs):
         user = request.user
         print(user)
-        context = {
-            'user':user
-        }
-        return render(request, self.template_name,context)
+        return render(request, self.template_name)
     
