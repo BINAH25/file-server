@@ -226,3 +226,15 @@ class PasswordResetDone(View):
         return render(request, self.template_name)
     
     
+class DeleteAccount(View):
+    def post(self, request, *args, **kwargs):
+        user_id = request.POST.get("user_id")
+        try:
+            user =  User.objects.get(id=user_id)
+            user.delete()
+            messages.success(request, "User Account Deleted  Successfully")
+            return redirect('/')
+        except User.DoesNotExist:
+            messages.error(request, "User Not Found")
+            return redirect(request.META.get("HTTP_REFERER"))
+        

@@ -82,13 +82,14 @@ def download_file(request, pk):
     return redirect(request.META.get("HTTP_REFERER"))
 
 
-class ChangePasswordView(View):
+class AccounView(View):
     template_name = "admin/account.html"
     
     @method_decorator(login_required(login_url="/"))
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
+class ChangePasswordView(View):
     @method_decorator(login_required(login_url="/"))
     def post(self, request, *args, **kwargs):
         """For changing password"""
@@ -109,14 +110,23 @@ class ChangePasswordView(View):
         except KeyError:
             messages.error(request, "Password Change Failed")
             return redirect(request.META.get("HTTP_REFERER"))
-        return render(request, self.template_name)
     
     
 class UserDashboard(View):
     template_name = "user/user_dashboard.html"
     @method_decorator(login_required(login_url="/"))
     def get(self, request, *args, **kwargs):
-        user = request.user
-        print(user)
+        files = File.objects.all().order_by('-created_at')
+        context = {
+            'files':files
+        }
+        return render(request, self.template_name,context)
+    
+    
+class UserAccounView(View):
+    template_name = "user/account.html"
+    
+    @method_decorator(login_required(login_url="/"))
+    def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     

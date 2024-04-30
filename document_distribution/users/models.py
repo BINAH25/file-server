@@ -1,10 +1,10 @@
-"""Models for user creation"""
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from users.managers import CustomUserManager
 
 # Create your models here.
 
+"""Models for user creation"""
 class User(AbstractUser):
     email_address = models.EmailField(
         verbose_name='email', max_length=200, unique=True)
@@ -17,8 +17,8 @@ class User(AbstractUser):
     def __str__(self):
         return self.email_address
     
+"""Code email model for temporary storing users until they verified their account"""
 class CodeEmail(models.Model):
-    """Code email model for temporary storing users until they redeem their account"""
     code = models.IntegerField(blank=True,null=True)
     email_address = models.EmailField(max_length=254, unique=False,blank=False)
     first_name = models.CharField(max_length=200, blank=True, unique=False,null=True)

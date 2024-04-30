@@ -28,17 +28,15 @@
                 <img src="{% static 'assets/icons/menu.png'%}" alt="" class="hamburger" />
                 <img src="{% static 'assets/icons/logo.svg'%}" alt="chunck it logo" class="logo" />
             </div>
-
-            <button class="file-upload btn-upload">+<small></small></button>
             <ul class="navigation">
                 <li>
-                    <a href="{% url 'files:dashboard' %}">
+                    <a href="{% url 'files:user-dashboard' %}">
                         <img src="{% static 'assets/icons/Folder-filled.png'%}" alt="" />
                         <small>Library</small>
                     </a>
                 </li>
                 <li class="active">
-                    <a href="{% url 'files:account' %}">
+                    <a href="{% url 'files:user-account' %}">
                         <img src="{% static 'assets/icons/manage_accounts.png'%}" alt="" />
                         <small>Account</small>
                     </a>
@@ -48,17 +46,19 @@
 
             <small class="copy-right"><strong>&copy; 2024, Inc</strong></small>
         </nav>
-        <section class="modal" id="delete-account-modal">
+        <form class="modal" id="delete-account-modal" action="{% url 'users:delete-account' %}" method="post">
+            {% csrf_token %}
             <div class="modal-content">
                 <h2>Delete Account</h2>
                 <p>
                     Are you sure you want to delete your account? All saved files will
                     be lost forever.
                 </p>
-                <button class="btn-danger">Delete Acount</button>
+                <input type="text" name="user_id" value="{{user.id}}">
+                <button class="btn-danger" type="submit">Delete Acount</button>
                 <button class="cancel">Cancel</button>
             </div>
-        </section>
+        </form>
         <section class="modal" id="logout-modal">
             <div class="modal-content">
                 <h2>Log out</h2>
