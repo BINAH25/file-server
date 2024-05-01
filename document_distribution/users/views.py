@@ -63,7 +63,7 @@ class Register(View):
                 messages.success(request, "Email Verification Code Sent to Email")
                 return redirect("users:verify")
             except Exception as e:
-                messages.error(request,f"Error sending email: {e}")
+                messages.error(request,f"Error sending email: {e}, try again")
                 return redirect(request.META.get("HTTP_REFERER"))
         
         # Generate Verification Code
@@ -89,7 +89,7 @@ class Register(View):
             messages.success(request, "Email Verification Code Sent to Email")
             return redirect("users:verify")
         except Exception as e:
-            messages.error(request,f"Error sending email: {e}")
+            messages.error(request,f"Error sending email: {e}, try again")
             return redirect(request.META.get("HTTP_REFERER"))
     
         return render(request, self.template_name)
@@ -189,7 +189,7 @@ class ResetPasswordView(View):
                 messages.success(request, "Password Reset Verification Code Sent to Email")
                 return redirect('users:password_reset_done')
             except Exception as e:
-                messages.error(request,f"Error sending email: {e}")
+                messages.error(request,f"Error sending email: {e}, try again")
                 return redirect(request.META.get("HTTP_REFERER"))
             
             ''' For sending password reset verification code to user for first time '''       
@@ -214,7 +214,7 @@ class ResetPasswordView(View):
                 messages.success(request, "Password Reset Verification Code Sent to Email")
                 return redirect('users:password_reset_done')
             except Exception as e:
-                messages.error(request,f"Error sending email: {e}")
+                messages.error(request,f"Error sending email: {e}, try again")
                 return redirect(request.META.get("HTTP_REFERER"))     
         else:
             messages.error(request, "User Not Found")

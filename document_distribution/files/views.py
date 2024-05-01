@@ -184,8 +184,8 @@ class SendFileViaEmail(View):
         """For getting absolute path of the and sending it to the email provided"""
         email_address = request.POST['email_address']
         file = File.objects.get(id=pk)
-        url = file.file.url
-        url = str(settings.BASE_DIR)+url
+        file_url = file.file.url
+        absolute_path = str(settings.BASE_DIR)+file_url
         # Validate email address format
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email_address):
             messages.error(request, "Invalid email address format")
@@ -199,7 +199,7 @@ class SendFileViaEmail(View):
                 [email_address]
             )
             email.attach_file(
-                url
+                absolute_path
             )
             email.send()
             file.emails_sent += 1
@@ -207,6 +207,6 @@ class SendFileViaEmail(View):
             messages.success(request, f"File sent to {email_address} Successfully")
             return redirect('files:user-dashboard')
         except Exception as e:
-            messages.error(request,f"Error sending email: {e}")
+            messages.error(request,f"Error sending email: {e}, try again")
             return redirect(request.META.get("HTTP_REFERER"))
         return render(request, self.template_name)
