@@ -22,10 +22,10 @@ The objective of the File Server project is to provide Lizzy's business with a d
 3. **Analytics**: Admin can view analytics such as the number of downloads and the number of emails sent for each file.
 
 ## Language and Libraries
-Python 
-Django 
-Javascript
-Html
+Python, 
+Django, 
+Javascript,
+Html,
 css
 ## Usage Guidelines
 1. **Clone the Repository:**
@@ -42,8 +42,24 @@ css
    ```bash
    cd document_distribution
    pip install -r requirements.txt
+
+
+4. **Run the following commands:**
+   ```bash
+   cd document_distribution
+   pip install -r requirements.txt
    python manage.py makemigrations
    python manage.py migrate
+
+
+5. **Create a Superuser by entering Email and Password:**
+   ```bash
    python manage.py createsuperuser 
+
+6. **Run the server:**
+   ```bash
    python manage.py runserver
-   
+
+7. **Visit the url below to display the login page:**
+   ```bash
+   http://127.0.0.1:8000/
