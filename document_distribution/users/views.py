@@ -63,7 +63,8 @@ class Register(View):
                 messages.success(request, "Email Verification Code Sent to Email")
                 return redirect("users:verify")
             except Exception as e:
-                print(f"Error sending email: {e}")
+                messages.error(request,f"Error sending email: {e}")
+                return redirect(request.META.get("HTTP_REFERER"))
         
         # Generate Verification Code
         generated_code = generate_activation_code()
@@ -88,7 +89,8 @@ class Register(View):
             messages.success(request, "Email Verification Code Sent to Email")
             return redirect("users:verify")
         except Exception as e:
-            print(f"Error sending email: {e}")
+            messages.error(request,f"Error sending email: {e}")
+            return redirect(request.META.get("HTTP_REFERER"))
     
         return render(request, self.template_name)
     
@@ -102,20 +104,22 @@ class CodeVerificationView(View):
     def post(self, request, *args, **kwargs):
         code = request.POST.get("code")
         try:
-            
             code_email = CodeEmail.objects.get(code=code)
             user = User.objects.create_user(username=code_email.email_address, email_address=code_email.email_address, password=code_email.password)
             user.save()
-            code_email.delete()
-            messages.success(request, "Email Verified")
-            return redirect('files:user-dashboard')
-            
+            user = authenticate(request, email_address=code_email.email_address, password=code_email.password)
+            if user is not None:
+                login(request,user)
+                code_email.delete()
+                messages.success(request, "Email Verified")
+                return redirect('files:user-dashboard')
+            else:
+                return redirect('/')
         except CodeEmail.DoesNotExist:
             messages.error(request, "Invalid or Wrong Code Entered")
             return redirect(request.META.get("HTTP_REFERER"))
 
         return render(request, self.template_name)
-    
     
 
     
@@ -185,7 +189,8 @@ class ResetPasswordView(View):
                 messages.success(request, "Password Reset Verification Code Sent to Email")
                 return redirect('users:password_reset_done')
             except Exception as e:
-                print(f"Error sending email: {e}")
+                messages.error(request,f"Error sending email: {e}")
+                return redirect(request.META.get("HTTP_REFERER"))
             
             ''' For sending password reset verification code to user for first time '''       
         elif User.objects.filter(email_address=email_address):
@@ -209,8 +214,8 @@ class ResetPasswordView(View):
                 messages.success(request, "Password Reset Verification Code Sent to Email")
                 return redirect('users:password_reset_done')
             except Exception as e:
-                print(f"Error sending email: {e}")
-                
+                messages.error(request,f"Error sending email: {e}")
+                return redirect(request.META.get("HTTP_REFERER"))     
         else:
             messages.error(request, "User Not Found")
             return redirect(request.META.get("HTTP_REFERER"))

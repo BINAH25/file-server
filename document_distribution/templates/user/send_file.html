@@ -47,6 +47,15 @@
             <small class="copy-right"><strong>&copy; 2024, Inc</strong></small>
         </nav>
         <div class="chunk-content">
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                {% if message.tags == "success"%}
+                <p style="color: rgb(37, 195, 135);">{{message}}</p>
+                {% else %}
+                <p style="color: red;">{{message}}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
             <form method="post" class="inner-modal-content" action="{% url 'files:send-file-via-email' file.id %}">
                 {% csrf_token %}
                 <label style="margin-left: -230px;" for="email">Email Address </label>
@@ -61,6 +70,15 @@
 
     <!-- <script src="dashboard.js"></script> -->
     <script src="{% static 'js/settings.js'%}"></script>
+    <script>
+        // Function to remove error messages after 5 seconds
+        setTimeout(function() {
+            var alertMessages = document.querySelectorAll('.alert');
+            alertMessages.forEach(function(alert) {
+                alert.remove();
+            });
+        }, 5000);
+    </script>
 </body>
 
 </html>

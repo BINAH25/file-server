@@ -25,10 +25,8 @@
             <div style="display: flex; gap:10px">
                 
                 <input type="search"  name="keyword" placeholder="search for file here...">
-                <button class="btn-upload" type="submit"> Search </button>
-                    
+                <button class="btn-upload" type="submit"> Search </button>      
             </div>
-        
         </form>
         
         <div class="user" style="margin-top: -20px;">
@@ -66,6 +64,15 @@
         
         {% if files %}
         <section class="saved-files">
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                {% if message.tags == "success"%}
+                <p style="color: rgb(37, 195, 135);">{{message}}</p>
+                {% else %}
+                <p style="color: red;">{{message}}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
             <table>
                 <thead>
                     <tr>
