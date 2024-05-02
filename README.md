@@ -88,4 +88,5 @@ Django
 ![alt text](image-9.png)
 9. **Reset Password Page**: click on the 'Reset Password' button on the login page then you will be redirected to the page below enter your email and a password verification will be sent to your email.
 ![alt text](image-11.png)
-10. **Reset Password Code Verification Page**:
+10. **Reset Password Code Verification Page**: Enter the verification code and your new password then click on "Reset Password" button
+![alt text](image-12.png)
