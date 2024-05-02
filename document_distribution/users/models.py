@@ -19,10 +19,8 @@ class User(AbstractUser):
     
 """Code email model for temporary storing users until they verified their account"""
 class CodeEmail(models.Model):
-    code = models.IntegerField(blank=True,null=True)
+    code = models.IntegerField()
     email_address = models.EmailField(max_length=254, unique=True,blank=False)
-    first_name = models.CharField(max_length=200, blank=True, unique=False,null=True)
-    other_names = models.CharField(max_length=200, blank=True, unique=False,null=True)
     password = models.CharField(max_length=200, blank=True, unique=False,null=True)
     updated_at= models.DateTimeField(auto_now=True)
     class Meta:
