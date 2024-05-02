@@ -1,27 +1,29 @@
-from django.contrib import messages
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.decorators import method_decorator
-from django.views import View
-from users.models import *
-from utils.function import generate_activation_code
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.conf import settings
-import re
-from django.shortcuts import get_object_or_404
-from django.contrib.auth import authenticate, login, logout, get_user_model
-User = get_user_model()
+'''
+    from django.contrib import messages
+    from django.db.models import Q
+    from django.shortcuts import get_object_or_404, redirect, render
+    from django.utils.decorators import method_decorator
+    from django.views import View
+    from users.models import *
+    from utils.function import generate_activation_code
+    from django.template.loader import render_to_string
+    from django.utils.html import strip_tags
+    from django.core.mail import send_mail, EmailMultiAlternatives
+    from django.conf import settings
+    import re
+    from django.shortcuts import get_object_or_404
+    from django.contrib.auth import authenticate, login, logout, get_user_model
+    User = get_user_model()
 
-# Create your views here.
-
+    # Create your views here.
+'''
+''''
 class Register(View):
     template_name = "user/register.html"
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
-    ''' Registering a users and make them temporal'''
+     #Registering a users and make them temporal
     def post(self, request, *args, **kwargs):
         
         email_address = request.POST.get("email_address")
@@ -100,9 +102,13 @@ class CodeVerificationView(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
-    ''' Verifying users account to make it permanent'''
+    #Verifying users account to make it permanent
     def post(self, request, *args, **kwargs):
         code = request.POST.get("code")
+        # Check if code is not numeric
+        if not code.isdigit():
+            messages.error(request, "The code must be numeric")
+            return redirect(request.META.get("HTTP_REFERER"))
         try:
             code_email = CodeEmail.objects.get(code=code)
             user = User.objects.create_user(username=code_email.email_address, email_address=code_email.email_address, password=code_email.password)
@@ -121,7 +127,6 @@ class CodeVerificationView(View):
 
         return render(request, self.template_name)
     
-
     
 class LoginView(View):
     template_name = "user/login.html"
@@ -166,7 +171,7 @@ class ResetPasswordView(View):
     
     def post(self, request, *args, **kwargs):
         email_address = request.POST['email_address']
-        ''' For sending Password Reset Verification Code again after the first attempt'''
+        #For sending Password Reset Verification Code again after the first attempt
         if User.objects.filter(email_address=email_address) and CodeEmail.objects.filter(email_address=email_address):
             code_user = CodeEmail.objects.get(email_address=email_address)
             verification_code = generate_activation_code()
@@ -192,7 +197,7 @@ class ResetPasswordView(View):
                 messages.error(request,f"Error sending email: {e}, try again")
                 return redirect(request.META.get("HTTP_REFERER"))
             
-            ''' For sending password reset verification code to user for first time '''       
+            #For sending password reset verification code to user for first time       
         elif User.objects.filter(email_address=email_address):
             verification_code = generate_activation_code()
             code_user = CodeEmail.objects.create(email_address=email_address,code=verification_code)
@@ -227,7 +232,7 @@ class PasswordResetDone(View):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
     
-    ''' Verifying the code and reseting the password'''
+        # Verifying the code  reseting the password
     def post(self, request, *args, **kwargs):
         code = request.POST.get("code")
         password = request.POST.get("password")
@@ -262,4 +267,4 @@ class DeleteAccount(View):
         except User.DoesNotExist:
             messages.error(request, "User Not Found")
             return redirect(request.META.get("HTTP_REFERER"))
-        
+''' 
