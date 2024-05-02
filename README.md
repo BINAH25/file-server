@@ -71,6 +71,7 @@ Django
 ![alt text](image.png)
 2. **Admin Dashboard**: the admin dashboard page shows the total number of downloads,email sent, files and users.Itl also displays the list of all the files uploaded with the download and email sent for each file. To add a new file click on the + button at the left corner
 ![alt text](image-1.png)
+![alt text](image-10.png)
 3. **User Registration Page**: New users can register by providing necessary details (Email and Password).
 ![alt text](image-2.png)
 4. **User Verification Page**: users should enter the verification code sent to their email on this page. Below are the images of the verification page and email verification code
@@ -85,3 +86,6 @@ Django
 8. **Account Page**: Click on 'Account' the left corner of your dashboard below library to go to the account. On the account users can change change their password by entering their current password and the new one.To delete your account, click on the 'Delete Account' button located in the bottom right corner. A pop up modal will appear to confirm the deletion
 ![alt text](image-8.png)
 ![alt text](image-9.png)
+9. **Reset Password Page**: click on the 'Reset Password' button on the login page then you will be redirected to the page below enter your email and a password verification will be sent to your email.
+![alt text](image-11.png)
+10. **Reset Password Code Verification Page**:
