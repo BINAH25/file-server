@@ -15,3 +15,10 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields ="__all__"
+        
+class SearchSerializer(serializers.Serializer):
+    keyword = serializers.CharField(max_length=254)
+    
+class SendFileSerializer(serializers.Serializer):
+    email_address = serializers.EmailField(max_length=254)
+    file_id = serializers.CharField(max_length=254)
