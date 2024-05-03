@@ -1,18 +1,18 @@
-# from django.urls import path
-# from . import views
+from django.urls import path
+from . import views
 
-# app_name = "files"
+app_name = "files"
 
-# urlpatterns = [
-#     # path("dashboard", views.DashboardView.as_view(), name="dashboard"),
-#     # path("file-upload", views.UploadFile.as_view(), name="file-upload"),
-#     # path('delete/<int:pk>/', views.DeleteFileView.as_view(), name="delete"),
-#     # path('download/<int:pk>/', views.DownloadFileView.as_view(), name="download"),
-#     # path('account', views.AccounView.as_view(), name="account"),
-#     # path('change-password', views.ChangePasswordView.as_view(), name="change-password"),
-#     # path("user-dashboard", views.UserDashboard.as_view(), name="user-dashboard"),
-#     # path("user-account", views.UserAccounView.as_view(), name="user-account"),
-#     # path("search-file", views.SearchView.as_view(), name="search-file"),
-#     # path("send-file-via-email/<int:pk>/", views.SendFileViaEmail.as_view(), name="send-file-via-email"),
+urlpatterns = [
+    path("dashboard", views.DashboardView.as_view(), name="dashboard"),
+    path("file-upload", views.UploadFile.as_view(), name="file-upload"),
+    path('delete/<int:pk>/', views.DeleteFileView.as_view(), name="delete"),
+    path('download/<int:pk>/', views.DownloadFileView.as_view(), name="download"),
+    path('account', views.AccounView.as_view(), name="account"),
+    path('change-password', views.ChangePasswordView.as_view(), name="change-password"),
+    path("user-dashboard", views.UserDashboard.as_view(), name="user-dashboard"),
+    path("user-account", views.UserAccounView.as_view(), name="user-account"),
+    path("search-file", views.SearchView.as_view(), name="search-file"),
+    path("send-file-via-email/<int:pk>/", views.SendFileViaEmail.as_view(), name="send-file-via-email"),
   
-# ]
+]

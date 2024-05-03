@@ -1,4 +1,4 @@
-'''
+
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
@@ -211,4 +211,3 @@ class SendFileViaEmail(View):
             messages.error(request,f"Error sending email: {e}, try again")
             return redirect(request.META.get("HTTP_REFERER"))
         return render(request, self.template_name)
-'''

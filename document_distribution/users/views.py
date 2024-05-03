@@ -1,23 +1,22 @@
-'''
-    from django.contrib import messages
-    from django.db.models import Q
-    from django.shortcuts import get_object_or_404, redirect, render
-    from django.utils.decorators import method_decorator
-    from django.views import View
-    from users.models import *
-    from utils.function import generate_activation_code
-    from django.template.loader import render_to_string
-    from django.utils.html import strip_tags
-    from django.core.mail import send_mail, EmailMultiAlternatives
-    from django.conf import settings
-    import re
-    from django.shortcuts import get_object_or_404
-    from django.contrib.auth import authenticate, login, logout, get_user_model
-    User = get_user_model()
 
-    # Create your views here.
-'''
-''''
+from django.contrib import messages
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.decorators import method_decorator
+from django.views import View
+from users.models import *
+from utils.function import generate_activation_code
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.conf import settings
+import re
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import authenticate, login, logout, get_user_model
+User = get_user_model()
+
+# Create your views here.
+
 class Register(View):
     template_name = "user/register.html"
     def get(self, request, *args, **kwargs):
@@ -267,4 +266,3 @@ class DeleteAccount(View):
         except User.DoesNotExist:
             messages.error(request, "User Not Found")
             return redirect(request.META.get("HTTP_REFERER"))
-''' 
