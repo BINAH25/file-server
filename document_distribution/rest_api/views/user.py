@@ -370,6 +370,14 @@ class ResetPasswordDoneAPI(generics.GenericAPIView):
         if serializers.is_valid():
             code = serializers.data['code']
             new_password = serializers.data['new_password']
+            if not code.isdigit():
+                return Response(
+                    {
+                        "status": "error",
+                        "detail": "The code must be numeric",
+                    },
+                    status=400,
+                )
             if len(new_password) < 4:
                 return Response(
                     {"status": "failure", "detail": "Password Must be at least 4 characters"},
