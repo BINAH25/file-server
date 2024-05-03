@@ -9,7 +9,6 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'email_address',
-
         ]
         
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -38,5 +37,14 @@ class CodeEmailSerializer(serializers.Serializer):
     email_address = serializers.EmailField(max_length=254)
     password = serializers.CharField(max_length=254)
 
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
+
+class ChangePasswordSerializer(serializers.Serializer):
+    current_password = serializers.CharField(max_length=254)
+    new_password = serializers.CharField(max_length=254)
+    
+class ResetPasswordSerializer(serializers.Serializer):
+    email_address = serializers.CharField(max_length=254)
+    
+class ResetPasswordDoneSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=254)
+    new_password = serializers.CharField(max_length=254)
