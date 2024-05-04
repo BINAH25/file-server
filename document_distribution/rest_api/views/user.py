@@ -50,7 +50,7 @@ class SignInAPI(generics.GenericAPIView):
                         "status": "error",
                         "detail": "User Not Found",
                     },
-                    status=400,
+                    status=404,
                 )
         else:
             return Response(
