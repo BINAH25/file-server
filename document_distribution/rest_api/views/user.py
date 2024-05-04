@@ -216,7 +216,7 @@ class LogOutAPI(generics.GenericAPIView):
             token.blacklist()
             return Response({"detail": "Successfully logged out."}, status=200)
         except Exception as e:
-            return Response({"detail": "Error logging out. {e}"}, status=400)
+            return Response({"detail": f"Error logging out. {e}"}, status=400)
 
 class ChangePasswordAPI(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -353,7 +353,7 @@ class ResetPasswordAPI(generics.GenericAPIView):
                         "status": "error",
                         "detail": "User Not Found",
                     },
-                    status=400,
+                    status=404,
                 )  
         else:
             return Response(
@@ -431,5 +431,5 @@ class DeleteAccountAPI(generics.GenericAPIView):
                     "status": "error",
                     "detail": "User Not Found",
                 },
-                status=status.HTTP_400_BAD_REQUEST,
+                status=404,
             )

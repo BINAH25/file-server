@@ -8,7 +8,47 @@
     - [JSON Body](#json-body)
     - [Error Responses](#error-responses)
     - [Successful Response Example](#successful-response-example)
-  - [CURATOR LOGIN](#curator-login)
+  - [USER REGISTRATION](#user-registration)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [EMAIL VERIFICATION](#email-verification)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [CHANGE PASSWORD](#change-password)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [RESET PASSWORD](#reset-password)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [RESET PASSWORD CODE VERIFICATION](#reset-password-code-verification)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [LOGOUT](#logout)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [DELETE ACCOUNT](#delete-account)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
 
 
 
@@ -100,5 +140,292 @@
   ],
   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxNDg4OTQyOSwiaWF0IjoxNzE0ODAzMDI5LCJqdGkiOiI4Mjg2ZGUxZTEyNDQ0ZTIzYjA1Yzg5YTJiMWYzNmJlOCIsInVzZXJfaWQiOjF9.-fS2fWQIFe5r7l-qTDBP9BGspeA3zNJIg37pG0jHG1w",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0ODAzMzI5LCJpYXQiOjE3MTQ4MDMwMjksImp0aSI6IjI3MjMwOWNlOTNlYTRhM2ZhNGRlNWY5MjE5OTUwOGJlIiwidXNlcl9pZCI6MX0.zj7n4Nd-Kd4Ix5MgIPrpWSLIksy1WGhXk-gWBEB8404"
+}
+```
+
+## USER REGISTRATION
+
+### Request Information
+
+| Method | URL                                      |
+| ------ | -----------------------------------------|
+| POST   | http://127.0.0.1:8000/api/auth/register/ |
+
+### Header
+
+| Type         | Property Name    |
+| ------------ | ---------------- |
+| Allow        | POST, OPTION     |
+| Content-Type | Application/Json |
+| Vary         | Accept           |
+
+### JSON Body
+
+| Property Name | type   | required | Description                  |
+| ------------- | ------ | -------- | ---------------------------- |
+| email_address | String | true     | The email address of user    |
+| password      | String | true     | The password of user         |
+
+### Error Responses
+
+| Code | Message                                  |
+| ---- | ---------------------------------------- |
+| 400  | "Password Must be at least 4 characters" |
+| 400  | "Invalid email address format"           |
+| 400  | "IEmail Already Exist"                   |
+| 400  | "Error sending email: {e}, try again"    |
+| 400  | "this field is required "                |
+
+### Successful Response Example
+
+```
+{
+  "status": "success",
+  "detail": "email verification code send",
+  "data": {
+    "email_address": "lbinah@st.ug.edu.gh"
+  }
+}
+```
+
+## EMAIL VERIFICATION
+
+### Request Information
+
+| Method | URL                                      |
+| ------ | -----------------------------------------|
+| POST   | http://127.0.0.1:8000/api/auth/verify/   |
+
+### Header
+
+| Type         | Property Name    |
+| ------------ | ---------------- |
+| Allow        | POST, OPTION     |
+| Content-Type | Application/Json |
+| Vary         | Accept           |
+
+### JSON Body
+
+| Property Name | type   | required | Description                         |
+| ------------- | ------ | -------- | ----------------------------------- |
+| code          | String | true     | code sent to user email address     |
+
+### Error Responses
+
+| Code | Message                            |
+| ---- | -----------------------------------|
+| 400  | "the code is required"             |
+| 400  | "The code must be numeric"         |
+| 400  | "Invalid or Wrong Code Entered"    |
+
+### Successful Response Example
+
+```
+{
+  "user": {
+    "email_address": "lbinah@st.ug.edu.gh"
+  },
+  "permission": [],
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxNDkwMDE1MiwiaWF0IjoxNzE0ODEzNzUyLCJqdGkiOiJjNzlkYTUxYWI1NWI0ZTU0OTVmMjhmYmYzZDk5NDg0NSIsInVzZXJfaWQiOjEwfQ.IQOSNgFuNHbCWf9O-5_PJDJ13xuGEeKiZuldfaSEo-Q",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0ODE0MDUyLCJpYXQiOjE3MTQ4MTM3NTIsImp0aSI6Ijg0MjM4ZDI4MjExYzRiMDliZDUzZGMzMjRlMDczMmMwIiwidXNlcl9pZCI6MTB9.CsUfGAA4yJBfucNedO6dUtX5YkIILo_UtwwnZ78tIok"
+}
+```
+
+## CHANGE PASSWORD
+
+### Request Information
+
+| Method | URL                                             |
+| ------ | ------------------------------------------------|
+| POST   | http://127.0.0.1:8000/api/auth/change-password/ |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+### JSON Body
+
+| Property Name     | type   | required | Description                         |
+| -------------     | ------ | -------- | ----------------------------------- |
+| current_password  | String | true     | user current password               |
+| new_password      | String | true     | user new  password                  |
+
+### Error Responses
+
+| Code | Message                                       |
+| ---- | ----------------------------------------------|
+| 400  | "Password Must be at least 4 characters"      |
+| 400  | "wrong current password"                      |
+| 401  | "Authentication credentials were not provided"|
+| 400  | "change password failed"                      |
+| 400  | "some field were not provided"                |
+
+### Successful Response Example
+
+```
+{
+  "status": "success",
+  "detail": "Password changed successfully"
+}
+```
+
+## RESET PASSWORD
+
+### Request Information
+
+| Method | URL                                             |
+| ------ | ------------------------------------------------|
+| POST   | http://127.0.0.1:8000/api/auth/reset-password/  |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+
+### JSON Body
+
+| Property Name     | type   | required | Description                         |
+| -------------     | ------ | -------- | ----------------------------------- |
+| email_address     | String | true     | email address of the user           |
+
+### Error Responses
+
+| Code | Message                                |
+| ---- | ---------------------------------------|
+| 400  | "Error sending email: {e}, try again"  |
+| 400  | "User Not Found"                       |
+| 400  | "some field were not provided"         |
+
+### Successful Response Example
+
+```
+{
+  "status": "success",
+  "detail": "Password Reset Verification Code Sent to Email",
+  "data": {
+    "email_address": "lbinah@st.ug.edu.gh"
+  }
+}
+```
+
+## RESET PASSWORD CODE VERIFICATION
+
+### Request Information
+
+| Method | URL                                                  |
+| ------ | -----------------------------------------------------|
+| POST   | http://127.0.0.1:8000/api/auth/reset-password-done/  |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+
+### JSON Body
+
+| Property Name     | type   | required | Description                         |
+| -------------     | ------ | -------- | ----------------------------------- |
+| code              | String | true     | code sent to the user email         |
+| new_password      | String | true     | user new password                   |
+
+### Error Responses
+
+| Code | Message                                                |
+| ---- | -------------------------------------------------------|
+| 400  | "The code must be numeric"                             |
+| 400  | "Password Must be at least 4 characters"               |
+| 400  | "some field were not provided"                         |
+| 400  | "Invalid or Wrong Password Verification Code Entered"  |
+
+### Successful Response Example
+
+```
+{
+  "status": "success",
+  "detail": "Password Reset Successfully"
+}
+```
+
+##  LOGOUT
+
+### Request Information
+
+| Method | URL                                     |
+| ------ | ----------------------------------------|
+| POST   | http://127.0.0.1:8000/api/auth/logout/  |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication token |
+
+### JSON Body
+
+| Property Name     | type   | required | Description           |
+| -------------     | ------ | -------- | ----------------------|
+| refresh           | String | true     | refresh token         |
+
+### Error Responses
+
+| Code | Message                                        |
+| ---- | -----------------------------------------------|
+| 400  | "Error logging out"                            |
+| 400  | "Authentication credentials were not provided" |
+
+### Successful Response Example
+
+```
+{
+  "detail": "Successfully logged out."
+}
+```
+
+
+##  DELETE ACCOUNT
+
+### Request Information
+
+| Method    | URL                                            |
+| ------    | -----------------------------------------------|
+| DELETE    | http://127.0.0.1:8000/api/auth/delete-account/ |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication token |
+
+
+### Error Responses
+
+| Code | Message                                        |
+| ---- | -----------------------------------------------|
+| 404  | "User Not Found"                            |
+| 400  | "Authentication credentials were not provided" |
+
+### Successful Response Example
+
+```
+{
+    "status": "success",
+    "detail": "User Account Deleted  Successfully",
 }
 ```
