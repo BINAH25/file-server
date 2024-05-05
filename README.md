@@ -1,6 +1,13 @@
 # file-server
 Welcome to the File Server project! This document serves as a guide to understand the purpose, functionality, and implementation details of this project.
 
+## Deployed Link & Admin Login Creadentials
+
+| URL          | https://file.pythonanywhere.com/    |
+| -------------| ------------------------------------|
+| Admin Email  | admin@gmail.com                     |
+| password     | 123                                 |
+
 ## Project Objective
 The objective of the File Server project is to provide Lizzy's business with a digital platform for distributing various documents, such as wedding cards, admission forms, and more, to users remotely. By creating this platform, Lizzy aims to scale her business efficiently. The platform will allow users to easily access and download documents, streamlining the distribution process.
 
@@ -90,3 +97,14 @@ Django
 ![alt text](image-11.png)
 10. **Reset Password Code Verification Page**: Enter the verification code and your new password then click on "Reset Password" button
 ![alt text](image-12.png)
+
+### API  VERSION DOCUMENTATION
+the Above appllication using a monolithic architecture.
+An api version of the above application is also available in this directory.
+
+```
+   document_distribution/rest_api
+```
+| API DOCUMENTATION URL| https://github.com/BINAH25/file-server/blob/main/document_distribution/Api_documentation.md|
+| ---------------------|--------------------------------------------------------------------------------------------|
+
