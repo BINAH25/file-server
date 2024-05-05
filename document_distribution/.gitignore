@@ -135,6 +135,5 @@ uploads
 
 node_modules
 bundled_staticfiles
-assets
 logs
 
