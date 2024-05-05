@@ -100,7 +100,7 @@ Django
 
 ### API  VERSION DOCUMENTATION
 the Above appllication using a monolithic architecture.
-An api version of the above application is also available in this directory.
+An api version of the above application which can be integrated with any frontend framework like React,Vue etc is also available in this directory.
 
 ```
    document_distribution/rest_api
