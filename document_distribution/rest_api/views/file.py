@@ -76,7 +76,7 @@ class DeleteFileAPI(generics.GenericAPIView):
         except File.DoesNotExist:
             return Response(
                 {"status": "error", "detail":"File Not Found"},
-                status=400
+                status=404
             )
             
 class DownloadFileAPI(generics.GenericAPIView):
@@ -101,7 +101,7 @@ class DownloadFileAPI(generics.GenericAPIView):
         except:
             return Response(
                 {"status": "error", "detail":"File Not Found"},
-                status=400
+                status=404
             )
             
 class SearchFileAPI(generics.GenericAPIView):
@@ -124,7 +124,7 @@ class SearchFileAPI(generics.GenericAPIView):
             )
             
             
-class GetFileToSendFileViaEmailAPI(generics.GenericAPIView):
+class GetFile(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = FileSerializer
     def get(self, request, pk, *args, **kwargs):
@@ -138,7 +138,7 @@ class GetFileToSendFileViaEmailAPI(generics.GenericAPIView):
         except File.DoesNotExist:
             return Response(
                 {"status": "failure", "detail": "File Not Found"},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=404,
             )
 
 class SendFileViaEmailAPI(generics.GenericAPIView):
@@ -155,7 +155,7 @@ class SendFileViaEmailAPI(generics.GenericAPIView):
                 except File.DoesNotExist:
                     return Response(
                         {"status": "failure", "detail": "File Not Found"},
-                        status=status.HTTP_400_BAD_REQUEST,
+                        status=404,
                     ) 
                 file_url = file.file.url
                 absolute_path = str(settings.BASE_DIR)+file_url

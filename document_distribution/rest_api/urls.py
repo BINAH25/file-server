@@ -19,7 +19,7 @@ urlpatterns = [
     path("file/delete-file/<int:pk>/", views.DeleteFileAPI.as_view()),  
     path("file/download-file/<int:pk>/", views.DownloadFileAPI.as_view()),  
     path("file/search-file/", views.SearchFileAPI.as_view()),  
-    path("file/get-to-send-file-via-email/<int:pk>/", views.GetFileToSendFileViaEmailAPI.as_view()),  
+    path("file/get-file/<int:pk>/", views.GetFile.as_view()),  
     path("file/send-file-via-email/", views.SendFileViaEmailAPI.as_view()),  
     
 ]

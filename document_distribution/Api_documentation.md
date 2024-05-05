@@ -50,9 +50,46 @@
     - [Error Responses](#error-responses)
     - [Successful Response Example](#successful-response-example)
 
-
-
-
+- [FILES](#files)
+  - [UPLOAD FILES](#upload-files)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [GET ALL UPLOADED FILES](#get-all-uploaded-files)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [GET FILE](#get-file)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [DOWNLOAD FILE](#download-file)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [DELETE FILE](#delete-file)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [SEARCH FOR FILE](#search-for-file)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+  - [SEND FILE VIA EMAIL](#send-file-via-email)
+    - [Request Information](#request-information)
+    - [Header](#header)
+    - [JSON Body](#json-body)
+    - [Error Responses](#error-responses)
+    - [Successful Response Example](#successful-response-example)
+   
 # Accounts
 ## LOGIN
 
@@ -427,5 +464,338 @@
 {
     "status": "success",
     "detail": "User Account Deleted  Successfully",
+}
+```
+
+
+# Files
+
+## UPLOAD FILES
+
+### Request Information
+
+| Method | URL                                         |
+| ------ | --------------------------------------------|
+| POST   | http://127.0.0.1:8000/api/file/upload-file/ |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+### JSON Body
+
+| Property Name     | type   | required | Description                     |
+| -------------     | ------ | -------- | --------------------------------|
+| title             | String | true     | title of the file               |
+| description       | String | true     | descrisption of the file        |
+| type              | String | true     | the type of file (eg,PDF,JPG)   |
+| file              | file   | true     | the file to be uploded          |
+
+### Error Responses
+
+| Code | Message                                              |
+| ---- | -----------------------------------------------------| 
+| 401  | "Authentication credentials were not provided"       |
+| 403  | "You do not have permission to perform this action"  |
+| 400  | "some field were not provided"                       |
+
+### Successful Response Example
+
+```
+ {
+  "status": "success",
+  "detail": "File Uploaded Successfully"
+}
+```
+
+## GET ALL UPLOADED FILES
+
+### Request Information
+
+| Method | URL                                           |
+| ------ | ----------------------------------------------|
+| GET    | http://127.0.0.1:8000/api/file/get-all-files/ |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+
+### Error Responses
+
+| Code | Message                                              |
+| ---- | -----------------------------------------------------| 
+| 401  | "Authentication credentials were not provided"       |
+
+### Successful Response Example
+
+```
+ {
+  "status": "success",
+  "detail": [
+    {
+      "id": 8,
+      "uploaded_by": {
+        "email_address": "admin@gmail.com"
+      },
+      "title": "Hall Registration",
+      "description": "Akuafo Hall",
+      "type": "PDF",
+      "file": "/media/files/hall.pdf",
+      "downloads": 0,
+      "emails_sent": 0,
+      "created_at": "2024-05-05T17:12:07.413115Z"
+    },
+    {
+      "id": 7,
+      "uploaded_by": {
+        "email_address": "admin@gmail.com"
+      },
+      "title": "louis",
+      "description": "seyram",
+      "type": "PDF",
+      "file": "/media/files/files_7eI58CV.pdf",
+      "downloads": 4,
+      "emails_sent": 2,
+      "created_at": "2024-05-03T12:17:28.583979Z"
+    },
+    {
+      "id": 2,
+      "uploaded_by": {
+        "email_address": "admin@gmail.com"
+      },
+      "title": "Final Year Project",
+      "description": "Before actually sending your email, you need to set up for it. So, let’s add some lines to the settings.py file of your Django app.",
+      "type": "PDF",
+      "file": "/media/files/dbm.2011.16.pdf",
+      "downloads": 1,
+      "emails_sent": 3,
+      "created_at": "2024-04-30T20:07:53.370747Z"
+    }
+  ]
+}
+```
+
+## GET FILE
+
+### Request Information
+
+| Method    | URL                                              |
+| ------    | -------------------------------------------------|
+| GET       | http://127.0.0.1:8000/api/file/get-file/file_id/ |
+| Example   | http://127.0.0.1:8000/api/file/get-file/7/       |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+
+
+### Error Responses
+
+| Code | Message                                              |
+| ---- | -----------------------------------------------------| 
+| 401  | "Authentication credentials were not provided"       |
+| 404  | "File Not Found"                                     |
+
+### Successful Response Example
+
+```
+{
+  "status": "success",
+  "detail": {
+    "id": 7,
+    "uploaded_by": {
+      "email_address": "admin@gmail.com"
+    },
+    "title": "louis",
+    "description": "seyram",
+    "type": "PDF",
+    "file": "/media/files/files_7eI58CV.pdf",
+    "downloads": 4,
+    "emails_sent": 2,
+    "created_at": "2024-05-03T12:17:28.583979Z"
+  }
+}
+```
+
+## DOWNLOAD FILE
+
+### Request Information
+
+| Method    | URL                                                   |
+| ------    | ------------------------------------------------------|
+| GET       | http://127.0.0.1:8000/api/file/download-file/file_id/ |
+| Example   | http://127.0.0.1:8000/api/file/download-file/8/       |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+
+
+### Error Responses
+
+| Code | Message                                              |
+| ---- | -----------------------------------------------------| 
+| 401  | "Authentication credentials were not provided"       |
+| 404  | "File Not Found"                                     |
+
+### Successful Response Example
+
+```
+![alt text](image.png)
+```
+
+## DELETE FILE
+
+### Request Information
+
+| Method    | URL                                                 |
+| ------    | ----------------------------------------------------|
+| DELETE    | http://127.0.0.1:8000/api/file/delete-file/file_id/ |
+| Example   | http://127.0.0.1:8000/api/file/delete-file/6/       |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+
+
+### Error Responses
+
+| Code | Message                                              |
+| ---- | -----------------------------------------------------| 
+| 401  | "Authentication credentials were not provided"       |
+| 403  | "You do not have permission to perform this action"  |
+| 404  | "File Not Found"                                     |
+
+### Successful Response Example
+
+```
+{
+  "status": "success",
+  "detail": "File Deleted Successfully"
+}
+```
+
+## SEARCH FOR FILE
+
+### Request Information
+
+| Method | URL                                         |
+| ------ | --------------------------------------------|
+| POST   | http://127.0.0.1:8000/api/file/search-file/ |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+### JSON Body
+
+| Property Name | type   | required | Description                         |
+| ------------- | ------ | -------- | ------------------------------------|
+| keyword       | String | true     | Enter keyword to search for file    |
+
+### Error Responses
+
+| Code | Message                                         |
+| ---- | ------------------------------------------------|
+| 400  | "this field is required "                       |
+| 401  | "Authentication credentials were not provided"  |
+| 404  | "File Not Found"                                |
+
+### Successful Response Example
+```
+{
+  "status": "success",
+  "detail": [
+    {
+      "id": 7,
+      "uploaded_by": {
+        "email_address": "admin@gmail.com"
+      },
+      "title": "louis",
+      "description": "seyram",
+      "type": "PDF",
+      "file": "/media/files/files_7eI58CV.pdf",
+      "downloads": 4,
+      "emails_sent": 2,
+      "created_at": "2024-05-03T12:17:28.583979Z"
+    }
+  ]
+}
+```
+
+
+## SEND FILE VIA EMAIL
+
+### Request Information
+
+| Method | URL                                                 |
+| ------ | ----------------------------------------------------|
+| POST   | http://127.0.0.1:8000/api/file/send-file-via-email/ |
+
+### Header
+
+| Type         | Property Name        |
+| ------------ | ---------------------|
+| Allow        | POST, OPTION         |
+| Content-Type | Application/Json     |
+| Vary         | Accept               |
+| token        | Authentication Token |
+
+### JSON Body
+
+| Property Name | type   | required | Description                         |
+| ------------- | ------ | -------- | ------------------------------------|
+| email_address | String | true     | Email Address to send the file to   |
+| file_id       | String | true     | the id of the file to be sent       |
+
+### Error Responses
+
+| Code | Message                                         |
+| ---- | ------------------------------------------------|
+| 400  | "this field is required "                       |
+| 400  | "Invalid email address format "                 |
+| 400  | "Error sending email try again "                |
+| 401  | "Authentication credentials were not provided"  |
+| 404  | "File Not Found"                                |
+
+### Successful Response Example
+```
+{
+  "status": "success",
+  "detail": "File sent to lbinah@st.ug.edu.gh Successfully"
 }
 ```
