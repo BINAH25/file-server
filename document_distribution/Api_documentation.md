@@ -663,9 +663,9 @@
 
 ### Successful Response Example
 
-```
+
 ![alt text](image.png)
-```
+
 
 ## DELETE FILE
 
