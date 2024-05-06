@@ -11,6 +11,9 @@ Welcome to the File Server project! This document serves as a guide to understan
 ## Project Objective
 The objective of the File Server project is to provide Lizzy's business with a digital platform for distributing various documents, such as wedding cards, admission forms, and more, to users remotely. By creating this platform, Lizzy aims to scale her business efficiently. The platform will allow users to easily access and download documents, streamlining the distribution process.
 
+## ER Diagram of Database Design
+![alt text](image-13.png)
+
 ## Key Features
 ### For Users (Customers)
 1. **User Registration**: New users can effortlessly register by providing necessary details (Email and Password).
