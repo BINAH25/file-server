@@ -34,7 +34,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['seyram.site', 'www.seyram.site']
 
 # Application definition
 
@@ -164,3 +164,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     50:'critical',
 }
+
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
