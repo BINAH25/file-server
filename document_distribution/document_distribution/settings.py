@@ -9,12 +9,25 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import boto3
+import json
+from botocore.exceptions import ClientError
 import os
 from pathlib import Path
 from . info import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+def get_database_secrets(secret_name="dr-project-secret", region_name="us-east-1"):
+    client = boto3.client("secretsmanager", region_name=region_name)
+    try:
+        response = client.get_secret_value(SecretId=secret_name)
+        if "SecretString" in response:
+            return json.loads(response["SecretString"])
+    except ClientError as e:
+        print(f"Error retrieving secrets: {e}")
+    return {}
+secrets = get_database_secrets()
 
 # EMAIL CONFIGURATION
 MAIL_BACKEND = MAIL_BACKEND
@@ -91,12 +104,12 @@ WSGI_APPLICATION = "document_distribution.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
+        "NAME": secrets.get("dbname", os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3")),
+        "USER": secrets.get("username", os.environ.get("SQL_USER", "user")),
+        "PASSWORD": secrets.get("password", os.environ.get("SQL_PASSWORD", "password")),
+        "HOST": secrets.get("host", os.environ.get("SQL_HOST", "localhost")),
+        "PORT": secrets.get("port", os.environ.get("SQL_PORT", "5432")),
     }
 }
 REST_FRAMEWORK = {
