@@ -45,7 +45,7 @@ SECRET_KEY = os.environ.get(
     'SECRET_KEY', default='qd#3^56(!u=x*&ij8f3x$&iuvzan%#6@ge)ssbqq_87ahoxifp')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -177,5 +177,9 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     50:'critical',
 }
+CSRF_TRUSTED_ORIGINS = [
+    "https://seyram.site",
+    "https://www.seyram.site",
+]
 
 
