@@ -47,7 +47,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['seyram.site', 'www.seyram.site']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
