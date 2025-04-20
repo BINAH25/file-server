@@ -18,16 +18,18 @@ from . info import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-def get_database_secrets(secret_name="dr-project-secret", region_name="us-east-2"):
-    client = boto3.client("secretsmanager", region_name=region_name)
-    try:
-        response = client.get_secret_value(SecretId=secret_name)
-        if "SecretString" in response:
-            return json.loads(response["SecretString"])
-    except ClientError as e:
-        print(f"Error retrieving secrets: {e}")
+def get_database_secrets(secret_name="dr-project-secret-postgres", primary_region="us-east-2", secondary_region="us-east-1"):
+    for region in [primary_region, secondary_region]:
+        try:
+            client = boto3.client("secretsmanager", region_name=region)
+            response = client.get_secret_value(SecretId=secret_name)
+            if "SecretString" in response:
+                print(f"Retrieved secret from {region}")
+                return json.loads(response["SecretString"])
+        except ClientError as e:
+            print(f"Failed in {region}: {e}")
     return {}
-secrets = get_database_secrets()
+
 
 # EMAIL CONFIGURATION
 MAIL_BACKEND = MAIL_BACKEND
