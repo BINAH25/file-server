@@ -33,37 +33,23 @@ def get_current_region():
             return region
     except Exception as e:
         print(f"Metadata fallback failed: {e}")
-    
-    # Check environment variables
-    region = os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION")
-    if region:
-        print(f"Detected region from env: {region}")
-        return region
-    
-    # Final fallback (optional)
-    print("Falling back to default region: us-west-2")
-    return "us-west-2"
 
 
-def get_database_secrets(secret_name="dr-project-secret-postgres", regions=("us-east-2", "us-east-1")):
+def get_database_secrets():
     current_region = get_current_region()
+    secret_name = f"dr-project-secret-{current_region}"
     print(f"print current region: {current_region}")
-    # Put the current region first
-    region_priority = [current_region] + [r for r in regions if r != current_region]
 
-    for region in region_priority:
-        try:
-            client = boto3.client("secretsmanager", region_name=region)
-            response = client.get_secret_value(SecretId=secret_name)
-            if "SecretString" in response:
-                print(f" Retrieved secret from {region}")
-                return json.loads(response["SecretString"])
-        except ClientError as e:
-            print(f" Failed to retrieve secret from {region}: {e}")
-    return {}
-
-
+    try:
+        print(f"Fetching secret: {secret_name}")
+        client = boto3.client("secretsmanager", region_name=current_region)
+        response = client.get_secret_value(SecretId=secret_name)
+        return json.loads(response["SecretString"])
+    except ClientError as e:
+        print(f"Failed to fetch secret: {e}")
+        raise RuntimeError("Could not retrieve DB credentials")
 secrets = get_database_secrets()
+
 # EMAIL CONFIGURATION
 MAIL_BACKEND = MAIL_BACKEND
 EMAIL_HOST = EMAIL_HOST
