@@ -18,7 +18,7 @@ from . info import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-def get_database_secrets(secret_name="dr-project-secret", region_name="us-east-1"):
+def get_database_secrets(secret_name="dr-project-secret", region_name="us-east-2"):
     client = boto3.client("secretsmanager", region_name=region_name)
     try:
         response = client.get_secret_value(SecretId=secret_name)
