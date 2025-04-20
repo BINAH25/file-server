@@ -30,7 +30,7 @@ def get_database_secrets(secret_name="dr-project-secret-postgres", primary_regio
             print(f"Failed in {region}: {e}")
     return {}
 
-
+secrets = get_database_secrets()
 # EMAIL CONFIGURATION
 MAIL_BACKEND = MAIL_BACKEND
 EMAIL_HOST = EMAIL_HOST
