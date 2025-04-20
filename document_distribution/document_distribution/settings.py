@@ -13,22 +13,39 @@ import boto3
 import json
 from botocore.exceptions import ClientError
 import os
+import json
 from pathlib import Path
 from . info import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-def get_database_secrets(secret_name="dr-project-secret-postgres", primary_region="us-east-2", secondary_region="us-east-1"):
-    for region in [primary_region, secondary_region]:
+def get_current_region():
+    """Try to get the region dynamically (EC2/ECS/other AWS services) or from env"""
+    try:
+        # From EC2 instance metadata (recommended in AWS)
+        import requests
+        r = requests.get('http://169.254.169.254/latest/dynamic/instance-identity/document', timeout=1)
+        return r.json()['region']
+    except Exception:
+        # Fallback to environment variable
+        return os.environ.get("AWS_REGION", "us-east-2")  # Default fallback
+
+def get_database_secrets(secret_name="dr-project-secret", regions=("us-east-2", "us-east-1")):
+    current_region = get_current_region()
+    # Put the current region first
+    region_priority = [current_region] + [r for r in regions if r != current_region]
+
+    for region in region_priority:
         try:
             client = boto3.client("secretsmanager", region_name=region)
             response = client.get_secret_value(SecretId=secret_name)
             if "SecretString" in response:
-                print(f"Retrieved secret from {region}")
+                print(f" Retrieved secret from {region}")
                 return json.loads(response["SecretString"])
         except ClientError as e:
-            print(f"Failed in {region}: {e}")
+            print(f" Failed to retrieve secret from {region}: {e}")
     return {}
+
 
 secrets = get_database_secrets()
 # EMAIL CONFIGURATION
