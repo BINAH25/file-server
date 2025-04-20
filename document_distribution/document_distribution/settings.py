@@ -19,19 +19,35 @@ from . info import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-def get_current_region():
-    """Try to get the region dynamically (EC2/ECS/other AWS services) or from env"""
-    try:
-        # From EC2 instance metadata (recommended in AWS)
-        import requests
-        r = requests.get('http://169.254.169.254/latest/dynamic/instance-identity/document', timeout=1)
-        return r.json()['region']
-    except Exception:
-        # Fallback to environment variable
-        return os.environ.get("AWS_REGION", "us-east-2")  # Default fallback
+import requests
 
-def get_database_secrets(secret_name="dr-project-secret", regions=("us-east-2", "us-east-1")):
+def get_current_region():
+    try:
+        response = requests.get(
+            "http://169.254.169.254/latest/dynamic/instance-identity/document",
+            timeout=2
+        )
+        region = response.json().get("region")
+        if region:
+            print(f"Detected region from metadata: {region}")
+            return region
+    except Exception as e:
+        print(f"Metadata fallback failed: {e}")
+    
+    # Check environment variables
+    region = os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION")
+    if region:
+        print(f"Detected region from env: {region}")
+        return region
+    
+    # Final fallback (optional)
+    print("Falling back to default region: us-west-2")
+    return "us-west-2"
+
+
+def get_database_secrets(secret_name="dr-project-secret-postgres", regions=("us-east-2", "us-east-1")):
     current_region = get_current_region()
+    print(f"print current region: {current_region}")
     # Put the current region first
     region_priority = [current_region] + [r for r in regions if r != current_region]
 
