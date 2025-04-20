@@ -16,10 +16,10 @@ import os
 import json
 from pathlib import Path
 from . info import *
+import requests
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-import requests
 
 def get_current_region():
     try:
