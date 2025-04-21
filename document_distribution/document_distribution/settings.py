@@ -37,7 +37,7 @@ def get_current_region():
 
 def get_database_secrets():
     current_region = get_current_region()
-    secret_name = f"dr-project-secret-{current_region}"
+    secret_name = f"dr-project-secret-key-{current_region}"
     print(f"print current region: {current_region}")
 
     try:
